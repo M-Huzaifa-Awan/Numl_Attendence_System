@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Attendance System</title>
+    <link rel="stylesheet" href="~/css/loginPage.css" />
+    <script src="~/js/login.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="logo">
+            <img src="https://seeklogo.com/images/N/numl-logo-8250E1FBC3-seeklogo.com.png" alt="">
+        </div>
+        
+        <form asp-controller="Login" class="p-3 mt-3" asp-action="Validatelogin" id="FormLogin" method="post" novalidate>
+
+            <div class="toggle-switch">
+                <input type="checkbox" id="loginToggle">
+                <span class="slider"></span>
+                <label for="loginToggle">Teacher</label>
+                <label for="loginToggle">Student</label>
+                <input type="hidden" id="isTeacher" name="isTeacher" value="true">
+            </div>
+
+            <div class="form-field d-flex align-items-center">
+                <span class="far fa-user"></span>
+                <input type="text" name="cnic" id="cnic" placeholder="CNIC">
+            </div>
+
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="password" name="password" id="pwd" placeholder="Password">
+            </div>
+
+            <button class="btn mt-3" type="submit">Login</button>
+            @if (ViewData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger mt-3">
+                    @ViewData["ErrorMessage"]
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        showErrorAnimation();
+                    });
+                </script>
+            }
+        </form>
+    </div>
+</body>
+</html>

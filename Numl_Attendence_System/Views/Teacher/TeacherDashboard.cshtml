@@ -1,0 +1,223 @@
+﻿@{
+    ViewData["Title"] = "TeacherDashboard";
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Attendance System</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="logo-container">
+            <img src="https://seeklogo.com/images/N/numl-logo-8250E1FBC3-seeklogo.com.png" alt="NUMl Logo">
+        </div>
+
+
+        <div class="dropdown mr-3">
+            <select class="btn btn-secondary" id="sessionDropdown">
+                <option value="" selected disabled>Select Session</option>
+                <option value="Morning">Morning</option>
+                <option value="Evening">Evening</option>
+            </select>
+        </div>
+
+        <div class="dropdown mr-3">
+            <select class="btn btn-secondary" id="semesterDropdown">
+                <option value="" selected disabled>Select Semester</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+            </select>
+        </div>
+
+        <div class="dropdown mr-3">
+            <select class="btn btn-secondary" id="sectionDropdown">
+                <option value="" selected disabled>Select Section</option>
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+            </select>
+        </div>
+
+
+        <div class="date-container">
+            <p class="mb-0">Today's Date: <span id="todayDate"></span></p>
+        </div>
+
+        <button class="btn btn-primary" id="enterButton" disabled>Enter</button>
+
+        <div class="dropdown mr-3">
+            <select class="btn btn-secondary" id="subjectDropdown">
+                <option value="" selected disabled>Select Subject</option>
+            </select>
+        </div>
+
+        <div class="dropdown mr-3">
+            <select class="btn btn-secondary" id="slotDropdown">
+                <option value="" selected disabled>Select Slot</option>
+                <option value="1">Slot 1</option>
+                <option value="2">Slot 2</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" id="submitButton" disabled>Submit</button>
+
+    </nav>
+
+    <div>
+        <table id="tableContainer"> </table>
+    </div>
+    <script>
+        var today = new Date();
+        var formattedDate = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
+        $("#todayDate").text(formattedDate);
+        $(document).ready(function () {
+            $("#sessionDropdown, #semesterDropdown, #sectionDropdown, #subjectDropdown , #slotDropdown").on('change', function () {
+                checkDropdowns();
+            });
+        });
+
+        function resetDropdowns() {
+            $("#sessionDropdown, #semesterDropdown, #sectionDropdown, #subjectDropdown, #slotDropdown").val(null).trigger('change');
+        }
+
+        //Buttons Enabeling and Disabling Fnctionality Code
+        function checkDropdowns() {
+            var session = $("#sessionDropdown").val();
+            var semester = $("#semesterDropdown").val();
+            var section = $("#sectionDropdown").val();
+            var subject = $("#subjectDropdown").val();
+            var slot = $("#slotDropdown").val();
+
+            if (session !== null && semester !== null && section !== null) {
+                $("#enterButton").prop('disabled', false);
+            }
+            else {
+                $("#enterButton").prop('disabled', true);
+            }
+            if (subject !== null && slot !== null) {
+                $("#submitButton").prop('disabled', false);
+            }
+            else {
+                $("#submitButton").prop('disabled', true);
+            }
+        }
+
+        var table;
+        function createTable(data) {
+            var oldTable = document.getElementById("tableContainer");
+            oldTable.innerHTML = "";
+            table = document.createElement("table");
+            table.classList.add("attendance-table");
+
+            var headerRow = table.insertRow(0);
+
+            var cellRollNo = document.createElement("th");
+            cellRollNo.textContent = "Roll No";
+
+            var cellName = document.createElement("th");
+            cellName.textContent = "Name";
+
+            var cellStatus = document.createElement("th");
+            cellStatus.textContent = "Status";
+
+
+            // Append header cells
+            headerRow.appendChild(cellRollNo);
+            headerRow.appendChild(cellName);
+            headerRow.appendChild(cellStatus);
+
+
+            // Add data rows
+            for (var i = 0; i < data.length; i++) {
+
+                var row = table.insertRow(-1);
+
+                var rNoCell = row.insertCell(0);
+                rNoCell.textContent = data[i].rollNo;
+
+                var nameCell = row.insertCell(1);
+                nameCell.textContent = data[i].NAME;
+
+                var statusCell = row.insertCell(2);
+                var statusDropdown = createStatusDropdown();
+                statusCell.appendChild(statusDropdown);
+
+            }
+
+            // Append table element to container
+            var tableContainer = document.getElementById("tableContainer");
+            tableContainer.innerHTML = "";
+            tableContainer.appendChild(table);
+
+        }
+        function createStatusDropdown() {
+            var dropdown = document.createElement("select");
+            dropdown.classList.add("form-control");
+
+            var optionPresent = document.createElement("option");
+            optionPresent.value = "Present";
+            optionPresent.text = "Present";
+
+            var optionAbsent = document.createElement("option");
+            optionAbsent.value = "Absent";
+            optionAbsent.text = "Absent";
+
+            dropdown.appendChild(optionPresent);
+            dropdown.appendChild(optionAbsent);
+
+            return dropdown;
+        }
+
+        //On Enter Button Press
+        function sendSelectedOptions() {
+            const session = $("#sessionDropdown").val();
+            const semester = $("#semesterDropdown").val();
+            const section = $("#sectionDropdown").val();
+            getDashboardData(session, semester, section);
+            getSubjectData(semester);
+
+        }
+
+        //Buttons Functionality Call Code
+        $("#enterButton").on('click', function () {
+            sendSelectedOptions();
+        });
+        document.getElementById("submitButton").addEventListener("click", function () {
+            var absentRollNos = [];
+            for (var i = 1; i < table.rows.length; i++) {
+                var statusDropdown = table.rows[i].cells[2].getElementsByTagName("select")[0];
+                var rollNo = table.rows[i].cells[0].textContent;
+
+                if (statusDropdown.value === "Absent") {
+                    absentRollNos.push(rollNo);
+                }
+            }
+            var slotDropdownValue = document.getElementById("slotDropdown").value;
+            var subjectDropdownValue = document.getElementById("subjectDropdown").value;
+
+            submitAttendence(absentRollNos, slotDropdownValue, subjectDropdownValue);
+            resetDropdowns();
+            $("#subjectDropdown").empty();
+            $("#subjectDropdown").val("Select Subject");
+
+            table.innerHTML = "";
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+
+</html>

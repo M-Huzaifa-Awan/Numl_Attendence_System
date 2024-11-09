@@ -1,0 +1,62 @@
+﻿.btn-sm {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+}
+
+#enterButton {
+    margin-right: 10px;
+}
+
+.btn-secondary {
+    background-color: darkblue !important;
+    border-color: darkblue !important;
+}
+
+select.btn-secondary {
+    color: white;
+}
+
+.date-container {
+    margin-right: 10px;
+}
+
+.navbar {
+    border: 2px solid black; /* Solid black border */
+}
+
+.logo-container {
+    margin-right: 20px;
+    text-align: center;
+    margin-bottom: 10px; /* Adjust margin as needed */
+}
+
+    .logo-container img {
+        width: 150px; /* Adjust the size as needed */
+        height: auto;
+    }
+
+/* Clear the default margin on the body */
+body {
+    margin: 0;
+}
+
+#tableContainer {
+    width: 100%;
+    margin: 0;
+}
+
+table {
+    width: 100%;
+}
+.attendance-table th {
+    background: darkblue !important;
+    color: white;
+    padding: 12px 15px;
+}
+
+.attendance-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Other table styles */
