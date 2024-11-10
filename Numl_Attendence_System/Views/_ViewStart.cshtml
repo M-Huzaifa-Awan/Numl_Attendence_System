@@ -1,3 +1,13 @@
 ﻿@{
-    Layout = "_LayoutLogin";
+    string controllerName = this.ViewContext.RouteData.Values["controller"]?.ToString()+"";
+
+    switch (controllerName)
+    {
+        case "Login":
+            Layout = "_LayoutLogin";
+            break;
+        default:
+            Layout = "_Layout";
+            break;
+    }
 }

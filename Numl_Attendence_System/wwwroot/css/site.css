@@ -18,5 +18,40 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background: url('../Images/NUML-00.jpg')no-repeat center center fixed;
+    background-size: cover;
+}
+header nav.navbar {
+    background-color: darkblue !important;
+}
+
+header .navbar-brand,
+header .nav-link {
+    color: white !important;
+}
+
+header .navbar-toggler {
+    background-color: white;
+}
+header nav.navbar {
+    background-color: darkblue !important;
+    border: 2px solid white !important;
+}
+header .nav-item .nav-link {
+    border: 1px ;
+    border-radius: 5px;
+    padding: 8px 15px !important;
+    transition: background-color 0.3s;
+}
+.navbar {
+    background-color: white;
+    border: 2px solid black;
+    padding: 15px 30px; /* Vertical and horizontal padding */
+    margin: 20px auto; /* Centers the navbar and adds vertical spacing */
+    max-width: 95%; /* Prevents the navbar from touching the edges */
+    border-radius: 8px; /* Optional: adds rounded corners */
+}
+.date-container {
+    color: white !important;
 }

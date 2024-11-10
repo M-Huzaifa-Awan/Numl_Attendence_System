@@ -19,44 +19,22 @@ select.btn-secondary {
 .date-container {
     margin-right: 10px;
 }
-
-.navbar {
-    border: 2px solid black; /* Solid black border */
-}
-
 .logo-container {
     margin-right: 20px;
     text-align: center;
-    margin-bottom: 10px; /* Adjust margin as needed */
+    margin-bottom: 10px; 
 }
 
     .logo-container img {
-        width: 150px; /* Adjust the size as needed */
+        width: 150px; 
         height: auto;
     }
-
-/* Clear the default margin on the body */
-body {
-    margin: 0;
+.second-nav .date-container {
+    margin: 0 15px !important;
+    white-space: nowrap !important;
 }
-
-#tableContainer {
-    width: 100%;
-    margin: 0;
+.second-nav .logo-container img {
+    height: 110px; 
+    width: auto;
+    margin-right: 15px;
 }
-
-table {
-    width: 100%;
-}
-.attendance-table th {
-    background: darkblue !important;
-    color: white;
-    padding: 12px 15px;
-}
-
-.attendance-table td {
-    padding: 10px 15px;
-    border-bottom: 1px solid #ddd;
-}
-
-/* Other table styles */

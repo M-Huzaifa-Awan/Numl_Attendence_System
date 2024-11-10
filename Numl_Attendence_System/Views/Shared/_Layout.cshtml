@@ -6,11 +6,12 @@
     <title>@ViewData["Title"] - Numl_Attendence_System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Numl_Attendence_System.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Numl_Attendence_System</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -20,12 +21,15 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Teacher" asp-action="TeacherDashboard">Teacher Portal</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="StudentDashboard">Student Portal</a>
                         </li>
                     </ul>
+                </div>
+                <div class="date-container">
+                    <p class="mb-0"><span id="Date"></span></p>
                 </div>
             </div>
         </nav>
@@ -35,12 +39,38 @@
             @RenderBody()
         </main>
     </div>
+    <script>
+        function updateDateTime() {
+            var now = new Date();
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Numl_Attendence_System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+            var monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+
+            var date = now.getDate();
+            var month = monthNames[now.getMonth()];
+            var year = now.getFullYear();
+
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            var formattedDateTime = date + " " + month + " " + year + " | " +
+                                   hours + ":" + minutes + ":" + seconds + " " + ampm;
+
+            $("#Date").text(formattedDateTime);
+        }
+
+        updateDateTime();
+
+        setInterval(updateDateTime, 1000);
+    </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
