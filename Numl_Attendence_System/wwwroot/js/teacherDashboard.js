@@ -26,4 +26,26 @@ $("#submitButton").on('click', function () {
     $("slotDropdown").val("2");
     //
 });
+$(document).ready(function () {
+    $("#semesterDropdown").on('change', function () {
+        var semester = $(this).val();
+
+        if (semester) {
+            $.ajax({
+                url: '/Teacher/GetSubjectsBySemester',
+                type: 'GET',
+                data: { semester: semester },
+                success: function (subjects) {
+                    $("#subjectDropdown").empty();
+
+                    $("#subjectDropdown").append('<option value="" selected disabled>Select Subject</option>');
+
+                    $.each(subjects, function (index, subject) {
+                        $("#subjectDropdown").append('<option value="' + subject.code + '">' + subject.name + '</option>');
+                    });
+                }
+            });
+        }
+    });
+});
 

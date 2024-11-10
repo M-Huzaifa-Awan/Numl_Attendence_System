@@ -20,7 +20,7 @@ public class LoginService : ILoginService
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            var query = "SELECT PasswordHash FROM Teachers WHERE CNIC = @CNIC";
+            var query = "SELECT PasswordHash FROM Teachers_Login WHERE CNIC = @CNIC";
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@CNIC", cnic);
 
@@ -51,7 +51,7 @@ public class LoginService : ILoginService
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            var query = "SELECT PasswordHash FROM Students WHERE CNIC = @CNIC";
+            var query = "SELECT PasswordHash FROM Students_Login WHERE CNIC = @CNIC";
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@CNIC", cnic);
 

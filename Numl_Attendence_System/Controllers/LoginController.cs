@@ -37,7 +37,7 @@ public class LoginController : Controller
     }
     public IActionResult Logout()
     {
-        HttpContext.Session.Clear();
+        //HttpContext.Session.Clear();
         return RedirectToAction("Login", "Login");
     }
 }

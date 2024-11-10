@@ -11,9 +11,18 @@ namespace Numl_Attendence_System.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        private readonly ITeacherService _teacherService;
+
+        public TeacherController(ITeacherService teacherService)
         {
-            return View();
+            _teacherService = teacherService;
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetSubjectsBySemester(int semester)
+        {
+            var subjects = await _teacherService.GetSubjectsBySemesterAsync(semester);
+            return Json(subjects);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
