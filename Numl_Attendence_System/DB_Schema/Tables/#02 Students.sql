@@ -2,27 +2,6 @@ CREATE DATABASE `Attendence_System`;
 
 USE `Attendence_System`;
 
-CREATE TABLE Teachers_Login (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    CNIC VARCHAR(13) NOT NULL UNIQUE,
-    PasswordHash VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE Students_Login  (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    CNIC VARCHAR(13) NOT NULL UNIQUE,
-    PasswordHash VARCHAR(255) NOT NULL
-);
-
--- Create the subjects table
-CREATE TABLE subjects (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    semester INT NOT NULL,
-    subject_name VARCHAR(100) NOT NULL,
-    subject_code VARCHAR(10) NOT NULL,
-    ACTIVE TINYINT(1) DEFAULT 1,
-    UNIQUE KEY unique_subject_code (subject_code)
-);
 CREATE TABLE students (
     roll_no VARCHAR(10) PRIMARY KEY,
     cnic VARCHAR(15) UNIQUE NOT NULL,
@@ -34,41 +13,6 @@ CREATE TABLE students (
     email VARCHAR(100) NOT NULL,
     shift VARCHAR(10) NOT NULL,
     ACTIVE TINYINT(1) DEFAULT 1
-);
-
-CREATE TABLE student_enrollments (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    roll_no VARCHAR(10) NOT NULL,
-    subject_code VARCHAR(10) NOT NULL,
-    FOREIGN KEY (roll_no) REFERENCES students(roll_no),
-    FOREIGN KEY (subject_code) REFERENCES subjects(subject_code)
-);
-CREATE TABLE attendance (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    roll_no VARCHAR(10) NOT NULL,
-    subject_code VARCHAR(10) NOT NULL,
-    DATE DATE NOT NULL,
-    slot1 VARCHAR(1),
-    slot2 VARCHAR(1),
-    -- Creating an index for common queries
-    INDEX idx_date (DATE),
-    -- Ensuring no duplicate attendance records for same enrollment on same date
-    UNIQUE KEY unique_attendance (roll_no, DATE)
-);
-
-INSERT INTO student_enrollments (roll_no, subject_code)
-SELECT 
-    s.roll_no,
-    sub.subject_code
-FROM students s
-CROSS JOIN subjects sub
-WHERE s.ACTIVE = 1
-AND sub.semester = 6
-AND NOT EXISTS (
-    SELECT 1 
-    FROM student_enrollments se 
-    WHERE se.roll_no = s.roll_no 
-    AND se.subject_code = sub.subject_code
 );
 
 INSERT INTO students (roll_no,cnic,student_name,father_name,gender,date_of_birth,mobile_no,email,shift) VALUES ('CS-129', '3410000000000', 'Ahsan javed', 'M javed sadiq', 'Male', '2002-10-07', '0343-0042944', 'ahsanjaved262@gmail.com', 'Evening');
@@ -126,81 +70,3 @@ INSERT INTO students (roll_no, cnic, student_name, father_name, gender, date_of_
 ('CS-68', '38201-2247241-9', 'Muhammad Huzaifa Awan', 'Arshad Mahmood Awan', 'Male', '2002-01-19', '0307-8222203', 'mhuzaifaawan7@gmail.com', 'Morning', 1),
 ('CS-77', '38201-4977837-1', 'Shaharyar Shah', 'Ahmad Din urf Muhammad Ameen', 'Male', '2004-04-24', '0330-2015757', 'shah20sherry@gmail.com', 'Morning', 1),
 ('CS-147', '42000000000000', 'Saad Naseem', 'Muhammad Naseem', 'Male', '2002-03-10', '0323-5885007', 'saaddraw137788@gmail.com', 'Evening', 1);
-
-
--- Insert statements for all subjects including labs
-INSERT INTO subjects (semester, subject_name, subject_code) VALUES
--- Semester 1
-(1, 'Introduction to Information and Communication Technologies', 'ICT101'),
-(1, 'ICT Lab', 'ICT101L'),
-(1, 'Programming Fundamentals', 'PF101'),
-(1, 'Programming Fundamentals Lab', 'PF101L'),
-(1, 'English Composition & Comprehension', 'ENG101'),
-(1, 'Pakistan Studies', 'PS101'),
-(1, 'Islamic Studies', 'ISL101'),
-(1, 'Applied Physics', 'PHY101'),
-(1, 'Pre-Math-I', 'MTH101'),
-
--- Semester 2
-(2, 'Object Oriented Programming', 'OOP201'),
-(2, 'Object Oriented Programming Lab', 'OOP201L'),
-(2, 'Communication & Presentation Skills', 'CPS201'),
-(2, 'Intro to Psychology', 'PSY201'),
-(2, 'Calculus and Analytical Geometry', 'MTH202'),
-(2, 'Discrete Structures', 'DS201'),
-(2, 'Social Service', 'SS201'),
-(2, 'Pre-Math-II', 'MTH203'),
-
--- Semester 3
-(3, 'Digital Logic Design', 'DLD301'),
-(3, 'Digital Logic Design Lab', 'DLD301L'),
-(3, 'Data Structures and Algorithms', 'DSA301'),
-(3, 'Data Structures and Algorithms Lab', 'DSA301L'),
-(3, 'Linear Algebra', 'MTH301'),
-(3, 'Professional Practices', 'PP301'),
-(3, 'Multi Variable Calculus', 'MVC301'),
-
--- Semester 4
-(4, 'Design & Analysis of Algorithms', 'DAA401'),
-(4, 'Software Engineering', 'SE401'),
-(4, 'Web Programming', 'WP401'),
-(4, 'Web Programming Lab', 'WP401L'),
-(4, 'Differential Equations', 'DE401'),
-(4, 'Advance OOP', 'OOP402'),
-(4, 'Advance OOP Lab', 'OOP402L'),
-(4, 'Digital Marketing', 'DM401'),
-
--- Semester 5
-(5, 'Database Systems', 'DBS501'),
-(5, 'Database Systems Lab', 'DBS501L'),
-(5, 'Computer Organization and Assembly Language', 'COAL501'),
-(5, 'Computer Organization and Assembly Language Lab', 'COAL501L'),
-(5, 'Operating Systems', 'OS501'),
-(5, 'Operating Systems Lab', 'OS501L'),
-(5, 'Statistics and Probability', 'STAT501'),
-(5, 'Computer Networks', 'CN501'),
-(5, 'Computer Networks Lab', 'CN501L'),
-
--- Semester 6
-(6, 'Visual Programming', 'VP601'),
-(6, 'Visual Programming Lab', 'VP601L'),
-(6, 'Computer Networks', 'CN601'),
-(6, 'Artificial Intelligence', 'AI601'),
-(6, 'Artificial Intelligence Lab', 'AI601L'),
-(6, 'Automata Theory', 'AT601'),
-(6, 'Technical Business Writing', 'TBW601'),
-
--- Semester 7
-(7, 'Computer Graphics', 'CG701'),
-(7, 'Computer Graphics Lab', 'CG701L'),
-(7, 'Software Project Management', 'SPM701'),
-(7, 'Software Project Management Lab', 'SPM701L'),
-(7, 'Compiler Construction', 'CC701'),
-(7, 'Information Security', 'IS701'),
-(7, 'Foreign Language (Chinese)', 'CHN701'),
-
--- Semester 8
-(8, 'Mobile Application Development', 'MAD801'),
-(8, 'Mobile Application Development Lab', 'MAD801L'),
-(8, 'Parallel and Distributed Computing', 'PDC801'),
-(8, 'Economics', 'ECO801');

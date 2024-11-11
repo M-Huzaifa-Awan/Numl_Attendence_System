@@ -29,7 +29,7 @@ public class LoginController : Controller
 
         if (isValid)
         {
-            return RedirectToAction(isTeacher ? "TeacherDashboard" : "StudentDashboard", "Teacher");
+            return RedirectToAction(isTeacher ? "AttendenceDashboard" : "AnalysisDashboard", "Attendence");
         }
 
         ViewData["ErrorMessage"] = "Invalid CNIC or password."; 

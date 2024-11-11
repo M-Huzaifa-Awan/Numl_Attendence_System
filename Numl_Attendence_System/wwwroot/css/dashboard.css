@@ -38,3 +38,38 @@ select.btn-secondary {
     width: auto;
     margin-right: 15px;
 }
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: white;
+    border: 2px solid #000;
+    border-collapse: collapse;
+}
+
+    .table th {
+        padding: 1rem;
+        vertical-align: middle;
+        background-color: #1a237e; /* Dark blue background for headers */
+        color: white;
+        font-weight: bold;
+        border: 1px solid #000;
+    }
+
+    .table td {
+        padding: 0.75rem;
+        vertical-align: middle;
+        border: 1px solid #000;
+        color: #000;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(0,0,0,.05);
+    }
+
+/* Additional styles for DataTable elements */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    margin: 10px 0;
+}
