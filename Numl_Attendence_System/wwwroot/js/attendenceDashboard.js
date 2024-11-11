@@ -44,6 +44,7 @@ $(document).ready(function () {
             });
         }
     });
+    
     $("#subjectDropdown, #shiftDropdown").on('change', function () {
         var subject = $("#subjectDropdown").val();
         var shift = $("#shiftDropdown").val();
@@ -61,26 +62,44 @@ $(document).ready(function () {
                         const numB = parseInt(b.rollNo.replace('CS-', ''));
                         return numA - numB;
                     });
-
                     $("#tableContainer").empty();
                     var tableHTML = `
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Roll No</th>
-                            <th>Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
                     $.each(students, function (index, student) {
                         tableHTML += `
-                    <tr>
-                        <td>${student.rollNo}</td>
-                        <td>${student.name}</td>
-                    </tr>`;
+                        <tr>
+                            <td>${student.rollNo}</td>
+                            <td>${student.name}</td>
+                            <td>
+                                <select class="form-control attendance-status">
+                                    <option value="P">Present</option>
+                                    <option value="A">Absent</option>
+                                </select>
+                            </td>
+                        </tr>`;
                     });
                     tableHTML += '</tbody></table>';
                     $("#tableContainer").html(tableHTML);
+
+                    $(".attendance-status").on('change', function () {
+                        var status = $(this).val();
+                        var row = $(this).closest('tr');
+                        if (status === 'P') {
+                            row.removeClass('table-danger').addClass('table-success');
+                        } else if (status === 'A') {
+                            row.removeClass('table-success').addClass('table-danger');
+                        } else {
+                            row.removeClass('table-success table-danger');
+                        }
+                    });
                 },
                 error: function (xhr, status, error) {
                     console.error("Error fetching student data:", error);
@@ -98,6 +117,52 @@ $(document).ready(function () {
     });
     $("#sessionDropdown, #semesterDropdown, #sectionDropdown, #subjectDropdown , #slotDropdown").on('change', function () {
         checkDropdowns();
+    });
+    $("#submitButton").on('click', function () {
+
+        var attendanceData = [];
+
+        $(".attendance-status").each(function () {
+            var rollNo = $(this).closest('tr').find('td:first').text();
+            var status = $(this).val();
+
+            attendanceData.push({
+                rollNo: rollNo,
+                status: status
+            });
+        });
+
+        var slot = $("#slotDropdown").val();
+
+        var submitData = {
+            subjectCode: $("#subjectDropdown").val(),
+            slot: parseInt($("#slotDropdown").val()),
+            attendanceRecords: attendanceData
+        };
+        $.ajax({
+            url: '/Attendence/MarkAttendance',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(submitData),
+            success: function (response) {
+                if (response.success) {
+                    alert("Attendance marked successfully!");
+                }
+                else {
+                    alert("Error marking attendance");
+
+                    $("#tableContainer").prepend(
+                        '<div class="alert alert-danger">:Error marking attendance:' + response.message + '</div>'
+                    );
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error submitting attendance:", error);
+                $("#tableContainer").prepend(
+                    '<div class="alert alert-danger">Error submitting attendance. Please try again.</div>'
+                );
+            }
+        });
     });
 });
 

@@ -24,16 +24,31 @@ namespace Numl_Attendence_System.Controllers
             var subjects = await _attendenceService.GetSubjectsBySemesterAsync(semester);
             return Json(subjects);
         }
+
+        [HttpGet]
         public async Task<JsonResult> GetStudentEnrollmentData(string subjectCode, string shift)
         {
             var studentData = await _attendenceService.GetStudentEnrollmentDataAsync(subjectCode, shift);
             return Json(studentData);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost]
+        public async Task<IActionResult> MarkAttendance([FromBody] AttendanceSubmissionModel model)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            try
+            {
+                await _attendenceService.MarkAttendanceAsync(
+                    model.SubjectCode,
+                    model.Slot,
+                    model.AttendanceRecords
+                );
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
     }
 }

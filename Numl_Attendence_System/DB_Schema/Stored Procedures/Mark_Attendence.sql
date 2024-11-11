@@ -1,54 +1,47 @@
-DELIMITER //
-
-CREATE PROCEDURE mark_attendance(
-    IN p_roll_no VARCHAR(20),
-    IN p_subject_code VARCHAR(20),
-    IN p_slot INT,
-    IN p_status VARCHAR(1)  -- 'P' or 'A'
-)
+DELIMITER $$
+USE `attendence_system`$$
+DROP PROCEDURE IF EXISTS `mark_attendance_bulk`$$
+CREATE PROCEDURE `mark_attendance_bulk`()
 BEGIN
     DECLARE v_today DATE;
-    DECLARE v_exists INT;
     
     -- Get today's date
     SET v_today = CURDATE();
     
-    -- Check if a record already exists for the student, subject, and current date
-    SELECT COUNT(*) INTO v_exists
-    FROM attendance
-    WHERE roll_no = p_roll_no
-      AND subject_code = p_subject_code
-      AND DATE = v_today;
-      
-    -- If no record exists, insert a new one
-    IF v_exists = 0 THEN
-        INSERT INTO attendance (roll_no, subject_code, DATE, slot1, slot2)
-        VALUES (p_roll_no, p_subject_code, v_today, 
-                IF(p_slot = 1, p_status, NULL), 
-                IF(p_slot = 2, p_status, NULL));
-    ELSE
-        -- If record exists, update the appropriate slot
-        IF p_slot = 1 THEN
-            UPDATE attendance
-            SET slot1 = p_status
-            WHERE roll_no = p_roll_no
-              AND subject_code = p_subject_code
-              AND DATE = v_today;
-        ELSEIF p_slot = 2 THEN
-            UPDATE attendance
-            SET slot2 = p_status
-            WHERE roll_no = p_roll_no
-              AND subject_code = p_subject_code
-              AND DATE = v_today;
-        ELSE
-            -- Raise an error for invalid slot number
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Invalid slot number. Use 1 or 2';
-        END IF;
-    END IF;
-      
-END //
-
+    -- Insert new records for students who don't have an attendance record today
+    INSERT INTO attendance (roll_no, subject_code, DATE, slot1, slot2)
+    SELECT 
+        t.roll_no,
+        t.subject_code,
+        v_today,
+        IF(t.slot = 1, t.status, NULL),
+        IF(t.slot = 2, t.status, NULL)
+    FROM temp_attendance t
+    WHERE NOT EXISTS (
+        SELECT 1 
+        FROM attendance a 
+        WHERE a.roll_no = t.roll_no 
+        AND a.subject_code = t.subject_code 
+        AND a.DATE = v_today
+    );
+    
+    UPDATE attendance a
+    INNER JOIN temp_attendance t ON 
+        a.roll_no = t.roll_no 
+        AND a.subject_code = t.subject_code
+        AND a.DATE = v_today
+        AND t.slot = 1
+    SET a.slot1 = t.status;
+    
+    UPDATE attendance a
+    INNER JOIN temp_attendance t ON 
+        a.roll_no = t.roll_no 
+        AND a.subject_code = t.subject_code
+        AND a.DATE = v_today
+        AND t.slot = 2
+    SET a.slot2 = t.status;
+    
+    TRUNCATE TABLE temp_attendance;
+    
+END$$
 DELIMITER ;
-CALL mark_attendance('CS-68', 'VP601', 1, 'P');
-CALL mark_attendance('CS-68', 'VP601', 2, 'A');

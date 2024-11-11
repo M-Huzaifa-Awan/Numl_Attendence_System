@@ -1,5 +1,3 @@
-CREATE DATABASE `Attendence_System`;
-
 USE `Attendence_System`;
 
 CREATE TABLE students (

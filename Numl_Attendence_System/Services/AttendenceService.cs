@@ -5,6 +5,7 @@ public interface IAttendenceService
 {
     Task<List<Subject>> GetSubjectsBySemesterAsync(int semester);
     Task<List<Student>> GetStudentEnrollmentDataAsync(string subjectCode, string shift);
+    Task MarkAttendanceAsync(string subjectCode, int slot, List<AttendanceRecord> attendanceRecords);
 }
 
 public class AttendenceService : IAttendenceService
@@ -90,5 +91,62 @@ public class AttendenceService : IAttendenceService
         return students;
     }
 
+    public async Task MarkAttendanceAsync(string subjectCode, int slot, List<AttendanceRecord> attendanceRecords)
+    {
+        try
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            using var transaction = await connection.BeginTransactionAsync();
+            try
+            {
+                var bulkInsertQuery = @"
+                INSERT INTO temp_attendance (roll_no, subject_code, slot, status) 
+                VALUES (@roll_no, @subject_code, @slot, @status)";
+
+                using (var bulkCommand = new MySqlCommand(bulkInsertQuery, connection, transaction))
+                {
+                    bulkCommand.Parameters.Add(new MySqlParameter("@roll_no", MySqlDbType.VarChar, 20));
+                    bulkCommand.Parameters.Add(new MySqlParameter("@subject_code", MySqlDbType.VarChar, 20));
+                    bulkCommand.Parameters.Add(new MySqlParameter("@slot", MySqlDbType.Int32));
+                    bulkCommand.Parameters.Add(new MySqlParameter("@status", MySqlDbType.VarChar, 1));
+
+                    foreach (var record in attendanceRecords)
+                    {
+                        bulkCommand.Parameters["@roll_no"].Value = record.RollNo;
+                        bulkCommand.Parameters["@subject_code"].Value = subjectCode;
+                        bulkCommand.Parameters["@slot"].Value = slot;
+                        bulkCommand.Parameters["@status"].Value = record.Status;
+
+                        await bulkCommand.ExecuteNonQueryAsync();
+                    }
+                }
+
+                using (var spCommand = new MySqlCommand("mark_attendance_bulk", connection, transaction))
+                {
+                    spCommand.CommandType = CommandType.StoredProcedure;
+                    await spCommand.ExecuteNonQueryAsync();
+                }
+
+                await transaction.CommitAsync();
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+        catch (MySqlException sqlEx)
+        {
+            Console.WriteLine($"Database Error: {sqlEx.Message}");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            throw;
+        }
+    }
 
 }
