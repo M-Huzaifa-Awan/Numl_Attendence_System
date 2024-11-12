@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Numl_Attendance_System.Models;
 using System.Diagnostics;
-
 namespace Numl_Attendance_System.Controllers
 {
+    [Authorize(Roles = "Teacher,Admin")]
     public class AttendanceController : Controller
     {
+
         public IActionResult AttendanceDashBoard()
         {
             return View();

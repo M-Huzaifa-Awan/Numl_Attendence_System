@@ -49,7 +49,7 @@
                 <tbody>`;
                     $.each(students, function (index, student) {
                         tableHTML += `
-                    <tr class="${rowClass}">
+                    <tr>
                         <td>${student.rollNo}</td>
                         <td>${student.name}</td>
                         <td>${student.attendancePercentage}%</td>

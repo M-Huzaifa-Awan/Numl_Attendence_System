@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 public class LoginController : Controller
 {
@@ -9,6 +11,7 @@ public class LoginController : Controller
     {
         _loginService = loginService;
     }
+
     public IActionResult Login()
     {
         return View();
@@ -29,15 +32,34 @@ public class LoginController : Controller
 
         if (isValid)
         {
-            return RedirectToAction(isTeacher ? "AttendanceDashboard" : "AnalysisDashboard", "Attendance");
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, cnic),
+                new Claim(ClaimTypes.Role, isTeacher ? "Teacher" : "Student")
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1)
+            };
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,new ClaimsPrincipal(claimsIdentity),authProperties);
+
+            return RedirectToAction(
+                isTeacher ? "AttendanceDashboard" : "AnalysisDashboard",
+                isTeacher ? "Attendance" : "Analysis"
+            );
         }
 
-        ViewData["ErrorMessage"] = "Invalid CNIC or password."; 
+        ViewData["ErrorMessage"] = "Invalid CNIC or password.";
         return View("Login");
     }
-    public IActionResult Logout()
+
+    public async Task<IActionResult> Logout()
     {
-        //HttpContext.Session.Clear();
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login", "Login");
     }
 }
