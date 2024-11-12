@@ -1,6 +1,6 @@
-CREATE DATABASE `Attendence_System`;
+CREATE DATABASE `Attendance_System`;
 
-USE `Attendence_System`;
+USE `Attendance_System`;
 
 CREATE TABLE Teachers_Login (
     Id INT AUTO_INCREMENT PRIMARY KEY,
@@ -13,4 +13,4 @@ CREATE TABLE Students_Login  (
     CNIC VARCHAR(13) NOT NULL UNIQUE,
     PasswordHash VARCHAR(255) NOT NULL
 );
-INSERT INTO Teachers_Login(CNIC, PasswordHash) VALUES ("Abrar","123");
+INSERT INTO Teachers_Login(CNIC, PasswordHash) VALUES ("Abrar","123"),("3820122472419","123");

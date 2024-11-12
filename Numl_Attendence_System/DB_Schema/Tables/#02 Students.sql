@@ -1,4 +1,4 @@
-USE `Attendence_System`;
+USE `Attendance_System`;
 
 CREATE TABLE students (
     roll_no VARCHAR(10) PRIMARY KEY,

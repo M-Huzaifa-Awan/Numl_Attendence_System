@@ -1,5 +1,5 @@
 DELIMITER $$
-USE `attendence_system`$$
+USE `attendance_system`$$
 DROP PROCEDURE IF EXISTS `mark_attendance_bulk`$$
 CREATE PROCEDURE `mark_attendance_bulk`()
 BEGIN

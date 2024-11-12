@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Numl_Attendence_System.Models;
+using Numl_Attendance_System.Models;
 using System.Diagnostics;
 
-namespace Numl_Attendence_System.Controllers
+namespace Numl_Attendance_System.Controllers
 {
     public class AnalysisController : Controller
     {
@@ -11,24 +11,17 @@ namespace Numl_Attendence_System.Controllers
             return View();
         }
 
-        private readonly IAttendenceService _attendenceService;
+        private readonly IAttendanceService _attendanceService;
 
-        public AnalysisController(IAttendenceService attendenceService)
+        public AnalysisController(IAttendanceService attendanceService)
         {
-            _attendenceService = attendenceService;
+            _attendanceService = attendanceService;
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetSubjectsBySemester(int semester)
+        public async Task<JsonResult> GetAttendanceData(string subjectCode, string shift)
         {
-            var subjects = await _attendenceService.GetSubjectsBySemesterAsync(semester);
-            return Json(subjects);
-        }
-
-        [HttpGet]
-        public async Task<JsonResult> GetStudentEnrollmentData(string subjectCode, string shift)
-        {
-            var studentData = await _attendenceService.GetStudentEnrollmentDataAsync(subjectCode, shift);
+            var studentData = await _attendanceService.GetStudentEnrollmentDataAsync(subjectCode, shift);
             return Json(studentData);
         }
     }

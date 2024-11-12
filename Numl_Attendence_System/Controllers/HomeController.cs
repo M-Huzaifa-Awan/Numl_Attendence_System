@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Numl_Attendence_System.Models;
+using Numl_Attendance_System.Models;
 using System.Diagnostics;
 
-namespace Numl_Attendence_System.Controllers
+namespace Numl_Attendance_System.Controllers
 {
     public class HomeController : Controller
     {

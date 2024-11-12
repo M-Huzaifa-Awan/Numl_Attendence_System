@@ -2,7 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddScoped<IAttendenceService, AttendenceService>();
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 

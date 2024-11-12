@@ -1,4 +1,4 @@
-USE `Attendence_System`;
+USE `Attendance_System`;
 
 DROP TABLE IF EXISTS temp_attendance;
 CREATE TABLE temp_attendance (

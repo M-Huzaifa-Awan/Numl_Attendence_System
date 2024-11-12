@@ -1,4 +1,4 @@
-namespace Numl_Attendence_System.Models
+namespace Numl_Attendance_System.Models
 {
     public class Subject
     {

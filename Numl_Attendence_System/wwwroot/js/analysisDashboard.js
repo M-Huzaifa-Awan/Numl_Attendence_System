@@ -1,35 +1,10 @@
-﻿function checkDropdowns() {
-    var session = $("#shiftDropdown").val();
-    var semester = $("#semesterDropdown").val();
-    var section = $("#sectionDropdown").val();
-    var subject = $("#subjectDropdown").val();
-    var slot = $("#slotDropdown").val();
-    if (semester == ("1")) {
-        if (session !== null && semester !== null && section !== null && subject !== null && slot !== null) {
-            $("#submitButton").prop('disabled', false);
-        }
-        else {
-            $("#submitButton").prop('disabled', true);
-        }
-    }
-    else {
-        if (session !== null && semester !== null && subject !== null && slot !== null) {
-            $("#submitButton").prop('disabled', false);
-        }
-        else {
-            $("#submitButton").prop('disabled', true);
-        }
-    }
-}
-
-
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $("#semesterDropdown", ).on('change', function () {
         var semester = $(this).val();
 
         if (semester) {
             $.ajax({
-                url: '/Attendence/GetSubjectsBySemester',
+                url: '/Attendance/GetSubjectsBySemester',
                 type: 'GET',
                 data: { semester: semester },
                 success: function (subjects) {
@@ -50,7 +25,7 @@ $(document).ready(function () {
         var shift = $("#shiftDropdown").val();
         if (subject && shift) {
             $.ajax({
-                url: '/Attendence/GetStudentEnrollmentData',
+                url: '/Analysis/GetAttendanceData',
                 type: 'GET',
                 data: {
                     subjectCode: subject,
@@ -114,55 +89,6 @@ $(document).ready(function () {
                 }
             });
         }
-    });
-    $("#sessionDropdown, #semesterDropdown, #sectionDropdown, #subjectDropdown , #slotDropdown").on('change', function () {
-        checkDropdowns();
-    });
-    $("#submitButton").on('click', function () {
-
-        var attendanceData = [];
-
-        $(".attendance-status").each(function () {
-            var rollNo = $(this).closest('tr').find('td:first').text();
-            var status = $(this).val();
-
-            attendanceData.push({
-                rollNo: rollNo,
-                status: status
-            });
-        });
-
-        var slot = $("#slotDropdown").val();
-
-        var submitData = {
-            subjectCode: $("#subjectDropdown").val(),
-            slot: parseInt($("#slotDropdown").val()),
-            attendanceRecords: attendanceData
-        };
-        $.ajax({
-            url: '/Attendence/MarkAttendance',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(submitData),
-            success: function (response) {
-                if (response.success) {
-                    alert("Attendance marked successfully!");
-                }
-                else {
-                    alert("Error marking attendance");
-
-                    $("#tableContainer").prepend(
-                        '<div class="alert alert-danger">:Error marking attendance:' + response.message + '</div>'
-                    );
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error submitting attendance:", error);
-                $("#tableContainer").prepend(
-                    '<div class="alert alert-danger">Error submitting attendance. Please try again.</div>'
-                );
-            }
-        });
     });
 });
 

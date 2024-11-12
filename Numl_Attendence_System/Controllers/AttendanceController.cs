@@ -1,34 +1,34 @@
 using Microsoft.AspNetCore.Mvc;
-using Numl_Attendence_System.Models;
+using Numl_Attendance_System.Models;
 using System.Diagnostics;
 
-namespace Numl_Attendence_System.Controllers
+namespace Numl_Attendance_System.Controllers
 {
-    public class AttendenceController : Controller
+    public class AttendanceController : Controller
     {
-        public IActionResult AttendenceDashBoard()
+        public IActionResult AttendanceDashBoard()
         {
             return View();
         }
 
-        private readonly IAttendenceService _attendenceService;
+        private readonly IAttendanceService _attendanceService;
 
-        public AttendenceController(IAttendenceService attendenceService)
+        public AttendanceController(IAttendanceService attendanceService)
         {
-            _attendenceService = attendenceService;
+            _attendanceService = attendanceService;
         }
 
         [HttpGet]
         public async Task<JsonResult> GetSubjectsBySemester(int semester)
         {
-            var subjects = await _attendenceService.GetSubjectsBySemesterAsync(semester);
+            var subjects = await _attendanceService.GetSubjectsBySemesterAsync(semester);
             return Json(subjects);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetStudentEnrollmentData(string subjectCode, string shift)
         {
-            var studentData = await _attendenceService.GetStudentEnrollmentDataAsync(subjectCode, shift);
+            var studentData = await _attendanceService.GetStudentEnrollmentDataAsync(subjectCode, shift);
             return Json(studentData);
         }
 
@@ -37,7 +37,7 @@ namespace Numl_Attendence_System.Controllers
         {
             try
             {
-                await _attendenceService.MarkAttendanceAsync(
+                await _attendanceService.MarkAttendanceAsync(
                     model.SubjectCode,
                     model.Slot,
                     model.AttendanceRecords

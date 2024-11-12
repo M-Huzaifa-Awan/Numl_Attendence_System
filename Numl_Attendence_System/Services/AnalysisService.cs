@@ -1,18 +1,18 @@
 using MySql.Data.MySqlClient;
 using System.Data;
 using Numl_Attendance_System.Models;
-public interface IAttendanceService
+public interface IAnalysisService
 {
     Task<List<Subject>> GetSubjectsBySemesterAsync(int semester);
     Task<List<Student>> GetStudentEnrollmentDataAsync(string subjectCode, string shift);
     Task MarkAttendanceAsync(string subjectCode, int slot, List<AttendanceRecord> attendanceRecords);
 }
 
-public class AttendanceService : IAttendanceService
+public class AnalysisService : IAnalysisService
 {
     private readonly string _connectionString;
 
-    public AttendanceService(IConfiguration configuration)
+    public AnalysisService(IConfiguration configuration)
     {
         _connectionString = configuration.GetValue<string>("MySQLConnection");
     }

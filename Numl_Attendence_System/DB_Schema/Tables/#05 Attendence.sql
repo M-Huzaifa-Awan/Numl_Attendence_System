@@ -1,4 +1,4 @@
-USE `Attendence_System`;
+USE `Attendance_System`;
 
 CREATE TABLE attendance (
     id INT AUTO_INCREMENT PRIMARY KEY,
