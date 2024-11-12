@@ -11,17 +11,17 @@ namespace Numl_Attendance_System.Controllers
             return View();
         }
 
-        private readonly IAttendanceService _attendanceService;
+        private readonly IAnalysisService _analysisService;
 
-        public AnalysisController(IAttendanceService attendanceService)
+        public AnalysisController(IAnalysisService analysisService)
         {
-            _attendanceService = attendanceService;
+            _analysisService = analysisService;
         }
 
         [HttpGet]
         public async Task<JsonResult> GetAttendanceData(string subjectCode, string shift)
         {
-            var studentData = await _attendanceService.GetStudentEnrollmentDataAsync(subjectCode, shift);
+            var studentData = await _analysisService.GetAttendanceDataAsync(subjectCode, shift);
             return Json(studentData);
         }
     }
