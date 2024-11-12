@@ -13,3 +13,4 @@ CREATE TABLE Students_Login  (
     CNIC VARCHAR(13) NOT NULL UNIQUE,
     PasswordHash VARCHAR(255) NOT NULL
 );
+INSERT INTO Teachers_Login(CNIC, PasswordHash) VALUES ("Abrar","123");
