@@ -26,7 +26,7 @@ select.btn-secondary {
 }
 
     .logo-container img {
-        width: 150px; 
+        width: 100px !important;
         height: auto;
     }
 .second-nav .date-container {

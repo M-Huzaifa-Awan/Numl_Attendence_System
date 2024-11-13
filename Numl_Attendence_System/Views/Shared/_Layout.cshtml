@@ -13,7 +13,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" >Numl_Attendance_System</a>
+                <div class="logo-container">
+                    <img src="https://seeklogo.com/images/N/numl-logo-8250E1FBC3-seeklogo.com.png" alt="NUMl Logo">
+                </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -71,7 +73,10 @@
             var formattedDateTime = date + " " + month + " " + year + " | " +
                                    hours + ":" + minutes + ":" + seconds + " " + ampm;
 
-            $("#Date").text(formattedDateTime);
+            try 
+            {
+                $("#Date").text(formattedDateTime);
+            }
         }
 
         updateDateTime();

@@ -2,17 +2,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Numl_Attendance_System.Models;
 using System.Diagnostics;
+
 namespace Numl_Attendance_System.Controllers
 {
-    [Authorize(Roles = "Teacher,Admin")]
+    [Authorize] // Base authorization requiring any authenticated user
     public class AttendanceController : Controller
     {
-
-        public IActionResult AttendanceDashBoard()
-        {
-            return View();
-        }
-
         private readonly IAttendanceService _attendanceService;
 
         public AttendanceController(IAttendanceService attendanceService)
@@ -20,7 +15,14 @@ namespace Numl_Attendance_System.Controllers
             _attendanceService = attendanceService;
         }
 
+        [Authorize(Roles = "Teacher,Admin")]
+        public IActionResult AttendanceDashBoard()
+        {
+            return View();
+        }
+
         [HttpGet]
+        [Authorize(Roles = "Teacher,Admin,Student")]
         public async Task<JsonResult> GetSubjectsBySemester(int semester)
         {
             var subjects = await _attendanceService.GetSubjectsBySemesterAsync(semester);
@@ -28,6 +30,7 @@ namespace Numl_Attendance_System.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Teacher,Admin")]
         public async Task<JsonResult> GetStudentEnrollmentData(string subjectCode, string shift)
         {
             var studentData = await _attendanceService.GetStudentEnrollmentDataAsync(subjectCode, shift);
@@ -35,6 +38,7 @@ namespace Numl_Attendance_System.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Teacher,Admin")]
         public async Task<IActionResult> MarkAttendance([FromBody] AttendanceSubmissionModel model)
         {
             try
@@ -44,7 +48,6 @@ namespace Numl_Attendance_System.Controllers
                     model.Slot,
                     model.AttendanceRecords
                 );
-
                 return Json(new { success = true });
             }
             catch (Exception ex)
