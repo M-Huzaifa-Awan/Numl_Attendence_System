@@ -1,21 +1,37 @@
-﻿function showErrorAnimation() {
-    const wrapper = document.querySelector('.wrapper');
-    if (wrapper) {
-        // Add error shadow
-        wrapper.style.boxShadow = "13px 13px 20px red, -13px -13px 20px red";
+﻿document.addEventListener("DOMContentLoaded", function () {
+    
 
-        // Optional: Reset the shadow after 3 seconds
-        setTimeout(() => {
-            wrapper.style.boxShadow = "13px 13px 20px #cacaca, -13px -13px 20px #ffffff";
-        }, 3000);
+    const forgotPasswordLink = document.getElementById('forgotPassword');
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            const passwordField = document.getElementById('pwd');
+            const submitButton = document.querySelector('.btn');
+            const form = document.getElementById('loginForm');
+
+            if (passwordField) {
+                passwordField.type = 'text';
+                passwordField.name = 'mobileNo';
+                passwordField.id = 'mobileNo';
+                passwordField.placeholder = 'Mobile Number';
+            }
+
+            if (submitButton) {
+                submitButton.textContent = 'Reset';
+            }
+
+            if (form) {
+                form.action = '/Login/ResetPassword';
+            }
+        });
     }
-}
-document.addEventListener("DOMContentLoaded", function () {
+
     const loginToggle = document.getElementById("loginToggle");
     const isTeacherInput = document.getElementById("isTeacher");
 
-    loginToggle.addEventListener("change", function () {
-        isTeacherInput.value = loginToggle.checked ? "false" : "true"; 
-    });
+    if (loginToggle && isTeacherInput) {
+        loginToggle.addEventListener("change", function () {
+            isTeacherInput.value = loginToggle.checked ? "false" : "true";
+        });
+    }
 });
-

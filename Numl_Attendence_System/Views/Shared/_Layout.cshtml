@@ -70,13 +70,8 @@
             minutes = minutes < 10 ? '0' + minutes : minutes;
             seconds = seconds < 10 ? '0' + seconds : seconds;
 
-            var formattedDateTime = date + " " + month + " " + year + " | " +
-                                   hours + ":" + minutes + ":" + seconds + " " + ampm;
-
-            try 
-            {
-                $("#Date").text(formattedDateTime);
-            }
+            var formattedDateTime = date + " " + month + " " + year + " | " + hours + ":" + minutes + ":" + seconds + " " + ampm;
+            document.getElementById("Date").textContent = formattedDateTime;
         }
 
         updateDateTime();

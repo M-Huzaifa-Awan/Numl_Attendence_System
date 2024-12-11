@@ -67,4 +67,14 @@ INSERT INTO students (roll_no, cnic, student_name, father_name, gender, date_of_
 ('CS-67', '37104-5741809-3', 'Muhammad Hamza', 'Muhammad Azam', 'Male', '2002-03-19', '0304-5966003', 'shahg125409@gmail.com', 'Morning', 1),
 ('CS-68', '38201-2247241-9', 'Muhammad Huzaifa Awan', 'Arshad Mahmood Awan', 'Male', '2002-01-19', '0307-8222203', 'mhuzaifaawan7@gmail.com', 'Morning', 1),
 ('CS-77', '38201-4977837-1', 'Shaharyar Shah', 'Ahmad Din urf Muhammad Ameen', 'Male', '2004-04-24', '0330-2015757', 'shah20sherry@gmail.com', 'Morning', 1),
-('CS-147', '42000000000000', 'Saad Naseem', 'Muhammad Naseem', 'Male', '2002-03-10', '0323-5885007', 'saaddraw137788@gmail.com', 'Evening', 1);
+('CS-147', '4200000000000', 'Saad Naseem', 'Muhammad Naseem', 'Male', '2002-03-10', '0323-5885007', 'saaddraw137788@gmail.com', 'Evening', 1);
+
+UPDATE students 
+SET cnic = CONCAT(
+    SUBSTRING(REPLACE(cnic, '-', ''), 1, 5),
+    '-',
+    SUBSTRING(REPLACE(cnic, '-', ''), 6, 7),
+    '-',
+    SUBSTRING(REPLACE(cnic, '-', ''), 13, 1)
+)
+WHERE cnic NOT LIKE '%-%';
