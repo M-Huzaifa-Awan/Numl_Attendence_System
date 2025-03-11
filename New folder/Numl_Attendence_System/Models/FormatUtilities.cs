@@ -2,21 +2,17 @@
 {
     public static class FormatUtilities
     {
-        public static string FormatCNIC(string cnic)
+        public static string FormatEmail(string email)
         {
-            cnic = cnic.Replace("-", "").Trim();
+            email = email.Trim();
 
-            if (cnic.Length != 13)
+            if (!System.Text.RegularExpressions.Regex.IsMatch(email,
+                @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
             {
-                throw new ArgumentException("CNIC must be 13 digits long");
+                throw new ArgumentException("Invalid email format");
             }
 
-            if (!cnic.All(char.IsDigit))
-            {
-                throw new ArgumentException("CNIC must contain only digits");
-            }
-
-            return $"{cnic.Substring(0, 5)}-{cnic.Substring(5, 7)}-{cnic.Substring(12, 1)}";
+            return email;
         }
 
         public static string FormatMobileNumber(string mobileNumber)

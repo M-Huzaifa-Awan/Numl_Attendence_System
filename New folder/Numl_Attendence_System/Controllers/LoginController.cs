@@ -13,30 +13,28 @@ public class LoginController : Controller
     {
         _loginService = loginService;
     }
-
     public IActionResult Login()
     {
         return View();
     }
-
     [HttpPost]
-    public async Task<IActionResult> Validatelogin(string cnic, string password, bool isTeacher)
+    public async Task<IActionResult> Validatelogin(string email, string password, bool isTeacher)
     {
-        if (string.IsNullOrEmpty(cnic) || string.IsNullOrEmpty(password))
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
-            ViewData["ErrorMessage"] = "Please provide CNIC and password.";
+            ViewData["ErrorMessage"] = "Please provide Email and password.";
             return View("Login");
         }
-        string formattedCNIC = FormatUtilities.FormatCNIC(cnic);
+        string formattedEmail = FormatUtilities.FormatEmail(email);
         bool isValid = isTeacher
-            ? await _loginService.ValidateTeacherLoginAsync(formattedCNIC, password)
-            : await _loginService.ValidateStudentLoginAsync(formattedCNIC, password);
+            ? await _loginService.ValidateTeacherLoginAsync(formattedEmail, password)
+            : await _loginService.ValidateStudentLoginAsync(formattedEmail, password);
 
         if (isValid)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, cnic),
+                new Claim(ClaimTypes.Name, email),
                 new Claim(ClaimTypes.Role, isTeacher ? "Teacher" : "Student")
             };
 
@@ -55,28 +53,28 @@ public class LoginController : Controller
             );
         }
 
-        ViewData["ErrorMessage"] = "Invalid CNIC or password.";
+        ViewData["ErrorMessage"] = "Invalid Email or password.";
         return View("Login");
     }
     [HttpPost]
-    public async Task<IActionResult> ResetPassword(string cnic, string mobileNo, bool isTeacher)
+    public async Task<IActionResult> ResetPassword(string email, string mobileNo, bool isTeacher)
     {
-        if (string.IsNullOrEmpty(cnic) || string.IsNullOrEmpty(mobileNo))
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(mobileNo))
         {
-            ViewData["ErrorMessage"] = "Please provide both CNIC and mobile number.";
+            ViewData["ErrorMessage"] = "Please provide both Email and mobile number.";
             return View("Login");
         }
-        string formattedCNIC = FormatUtilities.FormatCNIC(cnic);
+        string formattedEmail = FormatUtilities.FormatEmail(email);
         string formattedMobNo = FormatUtilities.FormatMobileNumber(mobileNo);
         try
         {
             bool isValidUser = isTeacher
-                ? await _loginService.CheckTeacherExsistanceAsync(formattedCNIC, formattedMobNo)
-                : await _loginService.CheckStudentExsistanceAsync(formattedCNIC, formattedMobNo);
+                ? await _loginService.CheckTeacherExsistanceAsync(formattedEmail, formattedMobNo)
+                : await _loginService.CheckStudentExsistanceAsync(formattedEmail, formattedMobNo);
             
             if (isValidUser) 
             {
-                ViewData["CNIC"] = formattedCNIC;
+                ViewData["Email"] = formattedEmail;
                 ViewData["IsTeacher"] = isTeacher;
 
                 return View("ResetPassword"); 
@@ -92,7 +90,7 @@ public class LoginController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ConfirmReset(string cnic, string newPassword, string confirmPassword, bool isTeacher)
+    public async Task<IActionResult> ConfirmReset(string email, string newPassword, string confirmPassword, bool isTeacher)
     {
         if (string.IsNullOrWhiteSpace(newPassword) || string.IsNullOrWhiteSpace(confirmPassword))
         {
@@ -103,15 +101,15 @@ public class LoginController : Controller
         if (newPassword != confirmPassword)
         {
             ViewData["ErrorMessage"] = "Passwords do not match.";
-            ViewData["CNIC"] = cnic;
+            ViewData["Email"] = email;
             return View("ResetPassword");
         }
 
         try
         {
             bool resetSuccessful = isTeacher
-                ? await _loginService.ResetTeacherPasswordAsync(cnic, newPassword)
-                : await _loginService.ResetStudentPasswordAsync(cnic, newPassword);
+                ? await _loginService.ResetTeacherPasswordAsync(email, newPassword)
+                : await _loginService.ResetStudentPasswordAsync(email, newPassword);
 
             if (resetSuccessful)
             {
@@ -122,7 +120,7 @@ public class LoginController : Controller
             else
             {
                 ViewData["ErrorMessage"] = "Failed to reset password. Please try again.";
-                ViewData["CNIC"] = cnic;
+                ViewData["Email"] = email;
                 ViewData["IsTeacher"] = isTeacher;
                 return View("ResetPassword");
             }
@@ -130,7 +128,7 @@ public class LoginController : Controller
         catch (Exception ex)
         {
             ViewData["ErrorMessage"] = "An error occurred. Please try again later.";
-            ViewData["CNIC"] = cnic;
+            ViewData["Email"] = email;
             ViewData["IsTeacher"] = isTeacher;
             return View("ResetPassword");
         }
