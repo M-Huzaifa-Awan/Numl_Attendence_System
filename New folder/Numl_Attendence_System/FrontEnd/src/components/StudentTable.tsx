@@ -49,24 +49,41 @@ const StudentTable = ({ searchQuery }: StudentTableProps) => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={markAllPresent}
-          className="bg-green-500 text-white px-4 py-2 rounded-md"
-        >
-          Mark All Present
-        </motion.button>
+    <motion.div 
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="space-y-6"
+    >
+      <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <div className="flex space-x-4">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={markAllPresent}
+            className="bg-gradient-to-r from-green-500 to-emerald-400 text-white px-6 py-2.5 rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
+          >
+            Mark All Present
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white px-6 py-2.5 rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
+          >
+            Export Attendance
+          </motion.button>
+        </div>
 
-        <div className="text-sm text-gray-500">
-          Total Students: {students.length} | Present:{" "}
-          {students.filter((s) => s.isPresent).length}
+        <div className="flex items-center space-x-2 bg-indigo-50 px-4 py-2 rounded-lg">
+          <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span className="text-sm font-medium text-indigo-600">
+            Present: {students.filter(s => s.isPresent).length}/{students.length}
+          </span>
         </div>
       </div>
 
-      <motion.div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -87,13 +104,14 @@ const StudentTable = ({ searchQuery }: StudentTableProps) => {
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-100">
             {students.map((student) => (
               <motion.tr
                 key={student.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                whileHover={{ backgroundColor: "#f9fafb" }}
+                whileHover={{ backgroundColor: "#fafafa" }}
+                className="transition-colors"
               >
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
@@ -116,15 +134,15 @@ const StudentTable = ({ searchQuery }: StudentTableProps) => {
                     {student.attendance}%
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => toggleAttendance(student.id)}
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    className={`px-4 py-1.5 rounded-full text-sm font-medium ${
                       student.isPresent
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
+                        ? "bg-green-100 text-green-700 border border-green-200"
+                        : "bg-red-100 text-red-700 border border-red-200"
                     }`}
                   >
                     {student.isPresent ? "Present" : "Absent"}
@@ -148,8 +166,8 @@ const StudentTable = ({ searchQuery }: StudentTableProps) => {
             ))}
           </tbody>
         </table>
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 };
 

@@ -12,32 +12,49 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between h-16">
+    <nav className="bg-gradient-to-r from-indigo-600 via-blue-500 to-indigo-400 text-white shadow-lg">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex justify-between h-20">
           <motion.div
-            className="flex items-center"
-            whileHover={{ scale: 1.05 }}
+            className="flex items-center space-x-4"
+            whileHover={{ scale: 1.02 }}
           >
-            <img src="/logo.png" alt="Logo" className="h-8 w-auto" />
-            <span className="ml-2 text-xl font-bold text-gray-800">
-              NUML Attendance
+            <div className="bg-white p-2 rounded-lg">
+              <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
+            </div>
+            <span className="text-2xl font-bold tracking-tight">
+              NUML Attendance System
             </span>
           </motion.div>
 
-          <div className="flex items-center space-x-6">
-            <div className="text-gray-600 text-sm">
-              {currentDateTime.toLocaleDateString()} -{" "}
-              {currentDateTime.toLocaleTimeString()}
+          <div className="flex items-center space-x-8">
+            <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="text-sm font-medium">
+                {currentDateTime.toLocaleTimeString()} |{" "}
+                {currentDateTime.toLocaleDateString()}
+              </span>
             </div>
 
-            <div className="hidden md:flex items-center space-x-4">
-              <NavLink href="/attendance">Attendance Dashboard</NavLink>
-              <NavLink href="/analysis">Analysis Dashboard</NavLink>
+            <div className="flex items-center space-x-6">
+              <NavLink href="/attendance">Dashboard</NavLink>
+              <NavLink href="/analysis">Analytics</NavLink>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-red-600 text-white px-4 py-2 rounded-md"
+                className="bg-red-500 hover:bg-red-600 text-white px-6 py-2.5 rounded-lg font-medium shadow-lg transition-all"
               >
                 Logout
               </motion.button>
