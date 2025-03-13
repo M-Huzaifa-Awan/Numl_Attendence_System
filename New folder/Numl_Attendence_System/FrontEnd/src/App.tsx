@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Homepage from "./Pages/Homepage";
+import Login from "./Pages/Auth/Login";
 
 export default function App() {
   return (
@@ -9,7 +10,7 @@ export default function App() {
         path="/auth"
         element={
           <>
-            <div>dfdsf</div>
+            <Login />
           </>
         }
       />
