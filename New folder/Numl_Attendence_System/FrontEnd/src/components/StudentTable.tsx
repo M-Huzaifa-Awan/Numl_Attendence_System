@@ -26,7 +26,8 @@ interface SortConfig {
   direction: "asc" | "desc";
 }
 
-const BATCH_SIZE = 30;
+const STUDENTS_PER_PAGE = 30;
+const ITEMS_PER_BATCH = 10;
 
 const StudentTable = ({ filterCriteria }: StudentTableProps) => {
   const [students, setStudents] = useState<Student[]>([
@@ -141,52 +142,266 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
       timeSlot: "10:00-11:30",
     },
     {
-      id: 11,
-      name: "Hamza Malik",
-      regNo: "2021-CS-11",
+      id: 1,
+      name: "John Doe",
+      regNo: "2021-CS-01",
       isPresent: true,
       session: "2023-24",
-      semester: "2",
-      section: "C",
+      semester: "1",
+      section: "A",
       subject: "programming",
-      timeSlot: "11:30-1:00",
+      timeSlot: "8:30-10:00",
     },
     {
-      id: 12,
-      name: "Mahnoor Ahmed",
-      regNo: "2021-CS-12",
+      id: 2,
+      name: "Jane Smith",
+      regNo: "2021-CS-02",
+      isPresent: false,
+      session: "2023-24",
+      semester: "1",
+      section: "A",
+      subject: "programming",
+      timeSlot: "8:30-10:00",
+    },
+    {
+      id: 3,
+      name: "Ali Ahmad",
+      regNo: "2021-CS-03",
+      isPresent: true,
+      session: "2023-24",
+      semester: "1",
+      section: "A",
+      subject: "programming",
+      timeSlot: "8:30-10:00",
+    },
+    {
+      id: 4,
+      name: "Sara Khan",
+      regNo: "2021-CS-04",
       isPresent: true,
       session: "2023-24",
       semester: "1",
       section: "B",
       subject: "database",
+      timeSlot: "10:00-11:30",
+    },
+    {
+      id: 5,
+      name: "Usman Ali",
+      regNo: "2021-CS-05",
+      isPresent: false,
+      session: "2023-24",
+      semester: "2",
+      section: "B",
+      subject: "networking",
+      timeSlot: "11:30-1:00",
+    },
+    {
+      id: 6,
+      name: "Fatima Hassan",
+      regNo: "2021-CS-06",
+      isPresent: true,
+      session: "2023-24",
+      semester: "2",
+      section: "A",
+      subject: "database",
       timeSlot: "8:30-10:00",
+    },
+    {
+      id: 7,
+      name: "Ahmed Khan",
+      regNo: "2021-CS-07",
+      isPresent: true,
+      session: "2023-24",
+      semester: "2",
+      section: "C",
+      subject: "networking",
+      timeSlot: "10:00-11:30",
+    },
+    {
+      id: 8,
+      name: "Zainab Malik",
+      regNo: "2021-CS-08",
+      isPresent: false,
+      session: "2023-24",
+      semester: "1",
+      section: "C",
+      subject: "programming",
+      timeSlot: "11:30-1:00",
+    },
+    {
+      id: 9,
+      name: "Omar Farooq",
+      regNo: "2021-CS-09",
+      isPresent: true,
+      session: "2023-24",
+      semester: "2",
+      section: "B",
+      subject: "database",
+      timeSlot: "8:30-10:00",
+    },
+    {
+      id: 10,
+      name: "Ayesha Tariq",
+      regNo: "2021-CS-10",
+      isPresent: false,
+      session: "2023-24",
+      semester: "1",
+      section: "A",
+      subject: "networking",
+      timeSlot: "10:00-11:30",
+    },
+    {
+      id: 1,
+      name: "John Doe",
+      regNo: "2021-CS-01",
+      isPresent: true,
+      session: "2023-24",
+      semester: "1",
+      section: "A",
+      subject: "programming",
+      timeSlot: "8:30-10:00",
+    },
+    {
+      id: 2,
+      name: "Jane Smith",
+      regNo: "2021-CS-02",
+      isPresent: false,
+      session: "2023-24",
+      semester: "1",
+      section: "A",
+      subject: "programming",
+      timeSlot: "8:30-10:00",
+    },
+    {
+      id: 3,
+      name: "Ali Ahmad",
+      regNo: "2021-CS-03",
+      isPresent: true,
+      session: "2023-24",
+      semester: "1",
+      section: "A",
+      subject: "programming",
+      timeSlot: "8:30-10:00",
+    },
+    {
+      id: 4,
+      name: "Sara Khan",
+      regNo: "2021-CS-04",
+      isPresent: true,
+      session: "2023-24",
+      semester: "1",
+      section: "B",
+      subject: "database",
+      timeSlot: "10:00-11:30",
+    },
+    {
+      id: 5,
+      name: "Usman Ali",
+      regNo: "2021-CS-05",
+      isPresent: false,
+      session: "2023-24",
+      semester: "2",
+      section: "B",
+      subject: "networking",
+      timeSlot: "11:30-1:00",
+    },
+    {
+      id: 6,
+      name: "Fatima Hassan",
+      regNo: "2021-CS-06",
+      isPresent: true,
+      session: "2023-24",
+      semester: "2",
+      section: "A",
+      subject: "database",
+      timeSlot: "8:30-10:00",
+    },
+    {
+      id: 7,
+      name: "Ahmed Khan",
+      regNo: "2021-CS-07",
+      isPresent: true,
+      session: "2023-24",
+      semester: "2",
+      section: "C",
+      subject: "networking",
+      timeSlot: "10:00-11:30",
+    },
+    {
+      id: 8,
+      name: "Zainab Malik",
+      regNo: "2021-CS-08",
+      isPresent: false,
+      session: "2023-24",
+      semester: "1",
+      section: "C",
+      subject: "programming",
+      timeSlot: "11:30-1:00",
+    },
+    {
+      id: 9,
+      name: "Omar Farooq",
+      regNo: "2021-CS-09",
+      isPresent: true,
+      session: "2023-24",
+      semester: "2",
+      section: "B",
+      subject: "database",
+      timeSlot: "8:30-10:00",
+    },
+    {
+      id: 10,
+      name: "Ayesha Tariq",
+      regNo: "2021-CS-10",
+      isPresent: false,
+      session: "2023-24",
+      semester: "1",
+      section: "A",
+      subject: "networking",
+      timeSlot: "10:00-11:30",
+    },
+    {
+      id: 9,
+      name: "Omar Farooq",
+      regNo: "2021-CS-19",
+      isPresent: true,
+      session: "2023-24",
+      semester: "2",
+      section: "B",
+      subject: "database",
+      timeSlot: "8:30-10:00",
+    },
+    {
+      id: 10,
+      name: "Ayesha Tariq",
+      regNo: "2021-CS-20",
+      isPresent: false,
+      session: "2023-24",
+      semester: "1",
+      section: "A",
+      subject: "networking",
+      timeSlot: "10:00-11:30",
     },
   ]);
 
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
-  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_BATCH);
   const { ref: loadMoreRef, inView } = useInView({
     threshold: 0.1,
     rootMargin: "100px",
   });
 
-  // Reset visible count when filter criteria changes
-  useEffect(() => {
-    setVisibleCount(BATCH_SIZE);
-    setSelectedRows([]);
-    setSortConfig(null);
-  }, [filterCriteria]);
+  // Reset animation state for table rows
+  const [tableKey, setTableKey] = useState(0);
 
-  // Load more items when scroll reaches threshold
-  useEffect(() => {
-    if (inView) {
-      setVisibleCount((prev) => prev + BATCH_SIZE);
-    }
-  }, [inView]);
+  // Add loading state for page transitions
+  const [isPageTransitioning, setIsPageTransitioning] = useState(false);
 
+  // First apply filters and sorting
   const filteredStudents = students.filter((student) => {
     if (!filterCriteria) return true;
     return Object.entries(filterCriteria).every(([key, value]) => {
@@ -215,16 +430,67 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
     return 0;
   });
 
-  const visibleStudents = sortedStudents.slice(0, visibleCount);
-  const hasMoreToLoad = visibleCount < sortedStudents.length;
+  // Update pagination logic
+  const totalStudents = sortedStudents.length;
+  const totalPages = Math.ceil(totalStudents / STUDENTS_PER_PAGE);
+  const pageStart = (currentPage - 1) * STUDENTS_PER_PAGE;
+  const pageEnd = Math.min(pageStart + STUDENTS_PER_PAGE, totalStudents);
 
+  // Get current page students and handle last page case
+  const currentPageStudents = sortedStudents.slice(pageStart, pageEnd);
+  const maxVisibleItems = currentPageStudents.length;
+
+  // Reset visible items when changing pages
+  useEffect(() => {
+    setVisibleItems(Math.min(ITEMS_PER_BATCH, maxVisibleItems));
+    setSelectedRows([]);
+  }, [currentPage, maxVisibleItems]);
+
+  // Update load more logic
+  useEffect(() => {
+    if (inView && visibleItems < maxVisibleItems) {
+      setVisibleItems((prev) =>
+        Math.min(prev + ITEMS_PER_BATCH, maxVisibleItems)
+      );
+    }
+  }, [inView, maxVisibleItems]);
+
+  // Get currently visible students
+  const visibleStudents = currentPageStudents.slice(0, visibleItems);
+  const hasMoreInPage = visibleItems < maxVisibleItems;
+
+  // Handle page change with complete reset
+  const handlePageChange = (page: number) => {
+    setIsPageTransitioning(true);
+    setTableKey((prev) => prev + 1); // Force table re-render
+    setCurrentPage(page);
+    setVisibleItems(0); // Reset to 0 first
+    setSelectedRows([]);
+    setSortConfig(null);
+
+    // Two-step loading for smoother transitions
+    setTimeout(() => {
+      setVisibleItems(ITEMS_PER_BATCH);
+      setIsPageTransitioning(false);
+    }, 100);
+  };
+
+  // Update select all to work with current page
   const handleSelectAll = () => {
     setSelectedRows((current) =>
-      current.length === visibleStudents.length
+      current.length === currentPageStudents.length
         ? []
-        : visibleStudents.map((s) => s.id)
+        : currentPageStudents.map((s) => s.id)
     );
   };
+
+  // Reset states when filter criteria changes
+  useEffect(() => {
+    setCurrentPage(1);
+    setVisibleItems(ITEMS_PER_BATCH);
+    setSelectedRows([]);
+    setSortConfig(null);
+  }, [filterCriteria]);
 
   const handleRowSelect = (id: number) => {
     setSelectedRows((current) =>
@@ -324,7 +590,10 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
         </div>
       </div>
       {/* Table */}
-      <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
+      <motion.div
+        key={tableKey}
+        className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
+      >
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gradient-to-r from-blue-900 to-blue-800">
             <tr>
@@ -332,8 +601,8 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
                 <input
                   type="checkbox"
                   checked={
-                    selectedRows.length === visibleStudents.length &&
-                    visibleStudents.length > 0
+                    selectedRows.length === currentPageStudents.length &&
+                    currentPageStudents.length > 0
                   }
                   onChange={handleSelectAll}
                   className="rounded border-blue-700 text-blue-600 focus:ring-blue-500 bg-blue-800/50"
@@ -374,73 +643,122 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
-            {visibleStudents.map((student, index) => (
-              <motion.tr
-                key={student.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                whileHover={{ backgroundColor: "#f8fafc" }}
-                className={`transition-colors ${
-                  selectedRows.includes(student.id) ? "bg-blue-50" : ""
-                }`}
-                // Add ref to the second-to-last item
-                ref={
-                  index === visibleStudents.length - 2 ? loadMoreRef : undefined
-                }
-              >
-                <td className="w-px px-6 py-4">
-                  <input
-                    type="checkbox"
-                    checked={selectedRows.includes(student.id)}
-                    onChange={() => handleRowSelect(student.id)}
-                    className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+            {isPageTransitioning ? (
+              <tr>
+                <td colSpan={4} className="px-6 py-8 text-center">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                    className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full mx-auto"
                   />
                 </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm font-semibold text-blue-900">
-                    {student.regNo}
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center">
-                    <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center text-white font-medium text-sm shadow-lg">
-                      {student.name.charAt(0)}
+              </tr>
+            ) : (
+              visibleStudents.map((student, index) => (
+                <motion.tr
+                  key={`${tableKey}-${student.id}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  whileHover={{ backgroundColor: "#f8fafc" }}
+                  className={`transition-colors ${
+                    selectedRows.includes(student.id) ? "bg-blue-50" : ""
+                  }`}
+                  // Add ref to the second-to-last item
+                  ref={
+                    index === visibleStudents.length - 2
+                      ? loadMoreRef
+                      : undefined
+                  }
+                >
+                  <td className="w-px px-6 py-4">
+                    <input
+                      type="checkbox"
+                      checked={selectedRows.includes(student.id)}
+                      onChange={() => handleRowSelect(student.id)}
+                      className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+                    />
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm font-semibold text-blue-900">
+                      {student.regNo}
                     </div>
-                    <div className="ml-3">
-                      <div className="text-sm font-medium text-gray-900">
-                        {student.name}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center">
+                      <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center text-white font-medium text-sm shadow-lg">
+                        {student.name.charAt(0)}
+                      </div>
+                      <div className="ml-3">
+                        <div className="text-sm font-medium text-gray-900">
+                          {student.name}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() =>
-                      toggleAttendance([student.id], !student.isPresent)
-                    }
-                    className={`px-4 py-1.5 rounded-full text-xs font-medium shadow-sm ${
-                      student.isPresent
-                        ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
-                        : "bg-gradient-to-r from-red-500 to-rose-600 text-white"
-                    }`}
-                  >
-                    {student.isPresent ? "Present" : "Absent"}
-                  </motion.button>
-                </td>
-              </motion.tr>
-            ))}
+                  </td>
+                  <td className="px-6 py-4">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() =>
+                        toggleAttendance([student.id], !student.isPresent)
+                      }
+                      className={`px-4 py-1.5 rounded-full text-xs font-medium shadow-sm ${
+                        student.isPresent
+                          ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
+                          : "bg-gradient-to-r from-red-500 to-rose-600 text-white"
+                      }`}
+                    >
+                      {student.isPresent ? "Present" : "Absent"}
+                    </motion.button>
+                  </td>
+                </motion.tr>
+              ))
+            )}
           </tbody>
         </table>
-        {/* Loading indicator */}
-        {hasMoreToLoad && (
-          <div className="p-4 flex justify-center text-gray-400">
+
+        {/* Loading indicator - Only show when not transitioning pages */}
+        {!isPageTransitioning && hasMoreInPage && (
+          <div
+            ref={loadMoreRef}
+            className="p-4 flex justify-center text-gray-400"
+          >
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full"
             />
+          </div>
+        )}
+      </motion.div>
+      {/* Pagination Controls */}
+      <div className="mt-6 flex items-center justify-between">
+        <div className="text-sm text-gray-500">
+          Showing {pageStart + 1} to {pageStart + visibleStudents.length} of{" "}
+          {totalStudents} students (Page {currentPage} of {totalPages})
+        </div>
+        {totalPages > 1 && (
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <motion.button
+                key={page}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handlePageChange(page)}
+                className={`min-w-[32px] h-8 rounded-lg text-sm font-medium ${
+                  currentPage === page
+                    ? "bg-blue-900 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {page}
+              </motion.button>
+            ))}
           </div>
         )}
       </div>
