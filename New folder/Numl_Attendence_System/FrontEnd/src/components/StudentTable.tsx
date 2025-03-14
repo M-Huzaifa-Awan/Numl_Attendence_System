@@ -544,211 +544,173 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
   }
 
   return (
-    <motion.div
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      className="space-y-6"
-    >
-      {/* Action Bar */}
+    <motion.div className="space-y-6">
+      {/* Action Bar - Responsive */}
       <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-xl shadow-lg border border-blue-700/30">
-        <div className="p-4 flex items-center justify-between">
-          <span className="text-white/90 font-medium">
+        <div className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <span className="text-white/90 font-medium text-sm sm:text-base">
             Selected:{" "}
             <strong className="text-white">{selectedRows.length}</strong> of{" "}
             <strong className="text-white">{filteredStudents.length}</strong>{" "}
             students
           </span>
+
           <AnimatePresence mode="wait">
-            {selectedRows.length > 0 ? (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="flex items-center gap-3"
-              >
+            {selectedRows.length > 0 && (
+              <motion.div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium"
                   onClick={() => toggleAttendance(selectedRows, true)}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-500 text-white rounded-lg font-medium shadow-lg hover:bg-green-600 transition-all"
                 >
-                  Mark Selected Present
+                  Mark Present
                 </motion.button>
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium"
                   onClick={() => toggleAttendance(selectedRows, false)}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-red-500 text-white rounded-lg font-medium shadow-lg hover:bg-red-600 transition-all"
                 >
-                  Mark Selected Absent
+                  Mark Absent
                 </motion.button>
               </motion.div>
-            ) : (
-              <div />
             )}
           </AnimatePresence>
         </div>
       </div>
-      {/* Table */}
-      <motion.div
-        key={tableKey}
-        className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
-      >
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gradient-to-r from-blue-900 to-blue-800">
-            <tr>
-              <th className="w-px px-6 py-4">
-                <input
-                  type="checkbox"
-                  checked={
-                    selectedRows.length === currentPageStudents.length &&
-                    currentPageStudents.length > 0
-                  }
-                  onChange={handleSelectAll}
-                  className="rounded border-blue-700 text-blue-600 focus:ring-blue-500 bg-blue-800/50"
-                />
-              </th>
-              {[
-                { key: "regNo", label: "Roll No" },
-                { key: "name", label: "Name" },
-                { key: "isPresent", label: "Status" },
-              ].map(({ key, label }) => (
-                <th
-                  key={key}
-                  onClick={() => handleSort(key as keyof Student)}
-                  className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer group hover:bg-blue-800/50 transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    {label}
-                    <div
-                      className={`transition-opacity ${
-                        sortConfig?.key === key
-                          ? "opacity-100"
-                          : "opacity-0 group-hover:opacity-50"
-                      }`}
-                    >
-                      {sortConfig?.key === key ? (
-                        sortConfig.direction === "asc" ? (
-                          "↑"
-                        ) : (
-                          "↓"
-                        )
-                      ) : (
-                        <ArrowUpDown size={14} />
-                      )}
-                    </div>
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100 bg-white">
-            {isPageTransitioning ? (
+
+      {/* Table Container - Responsive */}
+      <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gradient-to-r from-blue-900 to-blue-800">
               <tr>
-                <td colSpan={4} className="px-6 py-8 text-center">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full mx-auto"
+                <th className="w-px px-6 py-4">
+                  <input
+                    type="checkbox"
+                    checked={
+                      selectedRows.length === currentPageStudents.length &&
+                      currentPageStudents.length > 0
+                    }
+                    onChange={handleSelectAll}
+                    className="rounded border-blue-700 text-blue-600 focus:ring-blue-500 bg-blue-800/50"
                   />
-                </td>
+                </th>
+                {[
+                  { key: "regNo", label: "Roll No" },
+                  { key: "name", label: "Name" },
+                  { key: "isPresent", label: "Status" },
+                ].map(({ key, label }) => (
+                  <th
+                    key={key}
+                    onClick={() => handleSort(key as keyof Student)}
+                    className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer group hover:bg-blue-800/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      {label}
+                      <div
+                        className={`transition-opacity ${
+                          sortConfig?.key === key
+                            ? "opacity-100"
+                            : "opacity-0 group-hover:opacity-50"
+                        }`}
+                      >
+                        {sortConfig?.key === key ? (
+                          sortConfig.direction === "asc" ? (
+                            "↑"
+                          ) : (
+                            "↓"
+                          )
+                        ) : (
+                          <ArrowUpDown size={14} />
+                        )}
+                      </div>
+                    </div>
+                  </th>
+                ))}
               </tr>
-            ) : (
-              visibleStudents.map((student, index) => (
-                <motion.tr
-                  key={`${tableKey}-${student.id}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ backgroundColor: "#f8fafc" }}
-                  className={`transition-colors ${
-                    selectedRows.includes(student.id) ? "bg-blue-50" : ""
-                  }`}
-                  // Add ref to the second-to-last item
-                  ref={
-                    index === visibleStudents.length - 2
-                      ? loadMoreRef
-                      : undefined
-                  }
-                >
-                  <td className="w-px px-6 py-4">
-                    <input
-                      type="checkbox"
-                      checked={selectedRows.includes(student.id)}
-                      onChange={() => handleRowSelect(student.id)}
-                      className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+            </thead>
+            <tbody className="divide-y divide-gray-100 bg-white">
+              {isPageTransitioning ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-8 text-center">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                      className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full mx-auto"
                     />
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-semibold text-blue-900">
-                      {student.regNo}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center">
-                      <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center text-white font-medium text-sm shadow-lg">
-                        {student.name.charAt(0)}
+                </tr>
+              ) : (
+                visibleStudents.map((student, index) => (
+                  <motion.tr
+                    key={`${tableKey}-${student.id}`}
+                    className="group hover:bg-gray-50"
+                  >
+                    {/* Checkbox column */}
+                    <td className="w-px pl-4 pr-2 py-4 whitespace-nowrap">
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(student.id)}
+                        onChange={() => handleRowSelect(student.id)}
+                        className="rounded border-blue-300 text-blue-600"
+                      />
+                    </td>
+
+                    {/* Roll No column */}
+                    <td className="px-2 py-4 whitespace-nowrap">
+                      <div className="text-sm font-semibold text-blue-900">
+                        {student.regNo}
                       </div>
-                      <div className="ml-3">
-                        <div className="text-sm font-medium text-gray-900">
+                    </td>
+
+                    {/* Name column */}
+                    <td className="px-2 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-900 to-blue-700 flex-shrink-0">
+                          {student.name.charAt(0)}
+                        </div>
+                        <div className="ml-3 font-medium truncate max-w-[150px] sm:max-w-none">
                           {student.name}
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() =>
-                        toggleAttendance([student.id], !student.isPresent)
-                      }
-                      className={`px-4 py-1.5 rounded-full text-xs font-medium shadow-sm ${
-                        student.isPresent
-                          ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
-                          : "bg-gradient-to-r from-red-500 to-rose-600 text-white"
-                      }`}
-                    >
-                      {student.isPresent ? "Present" : "Absent"}
-                    </motion.button>
-                  </td>
-                </motion.tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    </td>
 
-        {/* Loading indicator - Only show when not transitioning pages */}
-        {!isPageTransitioning && hasMoreInPage && (
-          <div
-            ref={loadMoreRef}
-            className="p-4 flex justify-center text-gray-400"
-          >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full"
-            />
-          </div>
-        )}
-      </motion.div>
-      {/* Pagination Controls */}
-      <div className="mt-6 flex items-center justify-between">
-        <div className="text-sm text-gray-500">
+                    {/* Status column */}
+                    <td className="px-2 pr-4 py-4 whitespace-nowrap">
+                      <motion.button
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          student.isPresent
+                            ? "bg-green-500 text-white"
+                            : "bg-red-500 text-white"
+                        }`}
+                        onClick={() =>
+                          toggleAttendance([student.id], !student.isPresent)
+                        }
+                      >
+                        {student.isPresent ? "Present" : "Absent"}
+                      </motion.button>
+                    </td>
+                  </motion.tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Pagination - Responsive */}
+      <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="text-sm text-gray-500 text-center sm:text-left">
           Showing {pageStart + 1} to {pageStart + visibleStudents.length} of{" "}
-          {totalStudents} students (Page {currentPage} of {totalPages})
+          {totalStudents}
         </div>
         {totalPages > 1 && (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <motion.button
                 key={page}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 onClick={() => handlePageChange(page)}
                 className={`min-w-[32px] h-8 rounded-lg text-sm font-medium ${
                   currentPage === page
@@ -762,24 +724,6 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
           </div>
         )}
       </div>
-      {/* Save Changes Button */}
-      {hasChanges && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex justify-end"
-        >
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleSaveChanges}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-lg font-medium shadow-xl hover:shadow-2xl transition-all"
-          >
-            <Save size={18} />
-            Save Changes
-          </motion.button>
-        </motion.div>
-      )}
     </motion.div>
   );
 };

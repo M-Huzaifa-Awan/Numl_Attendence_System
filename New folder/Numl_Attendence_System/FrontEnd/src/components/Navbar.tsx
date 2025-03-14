@@ -5,10 +5,11 @@ import {
   Clock,
   LayoutDashboard,
   PieChart,
-
   User,
   Settings,
+  Menu,
 } from "lucide-react";
+import LogoSrc from "../assets/numl-logo-8250E1FBC3-seeklogo.com.svg";
 
 const Navbar = () => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -23,99 +24,107 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="relative">
-      <motion.nav
-        initial={{ y: -20 }}
-        animate={{ y: 0 }}
-        className="bg-gradient-to-r from-blue-900 to-blue-800 border-b border-blue-700/30 shadow-lg w-full mb-6"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between h-16 px-4">
-            {/* Logo Section */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-3"
-            >
-              <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-                <img src="/logo.png" alt="Logo" className="w-5 h-5" />
+    <div className="relative z-50">
+      <motion.nav className="bg-gradient-to-r from-blue-900 to-blue-800 shadow-lg w-full">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo Section - Updated with bigger size */}
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center">
+                <img
+                  src={LogoSrc}
+                  alt="NUML Logo"
+                  className="w-8 h-8 object-contain"
+                />
               </div>
-              <span className="text-white font-medium">NUML</span>
-            </motion.div>
+              <span className="text-lg font-medium text-white">NUML</span>
+            </div>
 
-            {/* Center Navigation */}
-            <div className="hidden md:flex items-center gap-2">
+            {/* Center Navigation - Desktop */}
+            <div className="hidden md:flex items-center gap-4">
               {[
                 { icon: LayoutDashboard, label: "Dashboard", active: true },
                 { icon: PieChart, label: "Analytics" },
                 { icon: Settings, label: "Settings" },
               ].map((item) => (
-                <motion.button
+                <button
                   key={item.label}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
                     item.active
-                      ? "bg-white/10 text-white"
-                      : "text-blue-100/70 hover:bg-white/5 hover:text-white"
+                      ? "bg-white/20 text-white"
+                      : "text-white/70 hover:bg-white/10 hover:text-white"
                   }`}
                 >
                   <item.icon size={18} />
-                  <span className="text-sm font-medium">{item.label}</span>
-                </motion.button>
+                  <span className="font-medium">{item.label}</span>
+                </button>
               ))}
             </div>
 
             {/* Right Section */}
-            <div className="flex items-center gap-3">
-              {/* Time Display */}
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white"
-              >
-                <Clock size={14} />
-                <span className="text-sm font-medium">
+            <div className="flex items-center gap-4">
+              {/* Time */}
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg text-white">
+                <Clock size={16} />
+                <span className="font-medium">
                   {currentDateTime.toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
                 </span>
-              </motion.div>
+              </div>
 
               {/* User Profile */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 text-white"
-              >
-                <span className="text-sm font-medium">John Doe</span>
-                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                  <User size={14} />
-                </div>
-              </motion.button>
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg text-white">
+                <span className="font-medium">John Doe</span>
+                <User size={18} />
+              </div>
 
-              {/* Logout Button */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
-              >
+              {/* Logout */}
+              <button className="p-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600">
                 <LogOut size={18} />
-              </motion.button>
+              </button>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="md:hidden p-2 text-white hover:bg-white/10 rounded-lg"
+              >
+                <Menu size={24} />
+              </button>
             </div>
           </div>
         </div>
       </motion.nav>
 
-      {/* Mobile Menu - Simplified */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 md:hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute top-16 left-0 right-0 bg-blue-800 shadow-lg md:hidden"
           >
-            {/* Mobile menu content */}
+            <div className="p-4 space-y-3">
+              {[
+                { icon: LayoutDashboard, label: "Dashboard", active: true },
+                { icon: PieChart, label: "Analytics" },
+                { icon: Settings, label: "Settings" },
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  className={`w-full flex items-center gap-2 px-4 py-2.5 rounded-lg ${
+                    item.active
+                      ? "bg-white/20 text-white"
+                      : "text-white/70 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  <item.icon size={18} />
+                  <span className="font-medium">{item.label}</span>
+                </button>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
