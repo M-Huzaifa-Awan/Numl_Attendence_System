@@ -30,384 +30,149 @@ const STUDENTS_PER_PAGE = 30;
 const ITEMS_PER_BATCH = 10;
 
 const StudentTable = ({ filterCriteria }: StudentTableProps) => {
-  const [students, setStudents] = useState<Student[]>([
-    {
-      id: 1,
-      name: "John Doe",
-      regNo: "2021-CS-01",
-      isPresent: true,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "programming",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      regNo: "2021-CS-02",
-      isPresent: false,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "programming",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 3,
-      name: "Ali Ahmad",
-      regNo: "2021-CS-03",
-      isPresent: true,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "programming",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 4,
-      name: "Sara Khan",
-      regNo: "2021-CS-04",
-      isPresent: true,
-      session: "2023-24",
-      semester: "1",
-      section: "B",
-      subject: "database",
-      timeSlot: "10:00-11:30",
-    },
-    {
-      id: 5,
-      name: "Usman Ali",
-      regNo: "2021-CS-05",
-      isPresent: false,
-      session: "2023-24",
-      semester: "2",
-      section: "B",
-      subject: "networking",
-      timeSlot: "11:30-1:00",
-    },
-    {
-      id: 6,
-      name: "Fatima Hassan",
-      regNo: "2021-CS-06",
-      isPresent: true,
-      session: "2023-24",
-      semester: "2",
-      section: "A",
-      subject: "database",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 7,
-      name: "Ahmed Khan",
-      regNo: "2021-CS-07",
-      isPresent: true,
-      session: "2023-24",
-      semester: "2",
-      section: "C",
-      subject: "networking",
-      timeSlot: "10:00-11:30",
-    },
-    {
-      id: 8,
-      name: "Zainab Malik",
-      regNo: "2021-CS-08",
-      isPresent: false,
-      session: "2023-24",
-      semester: "1",
-      section: "C",
-      subject: "programming",
-      timeSlot: "11:30-1:00",
-    },
-    {
-      id: 9,
-      name: "Omar Farooq",
-      regNo: "2021-CS-09",
-      isPresent: true,
-      session: "2023-24",
-      semester: "2",
-      section: "B",
-      subject: "database",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 10,
-      name: "Ayesha Tariq",
-      regNo: "2021-CS-10",
-      isPresent: false,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "networking",
-      timeSlot: "10:00-11:30",
-    },
-    {
-      id: 1,
-      name: "John Doe",
-      regNo: "2021-CS-01",
-      isPresent: true,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "programming",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      regNo: "2021-CS-02",
-      isPresent: false,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "programming",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 3,
-      name: "Ali Ahmad",
-      regNo: "2021-CS-03",
-      isPresent: true,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "programming",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 4,
-      name: "Sara Khan",
-      regNo: "2021-CS-04",
-      isPresent: true,
-      session: "2023-24",
-      semester: "1",
-      section: "B",
-      subject: "database",
-      timeSlot: "10:00-11:30",
-    },
-    {
-      id: 5,
-      name: "Usman Ali",
-      regNo: "2021-CS-05",
-      isPresent: false,
-      session: "2023-24",
-      semester: "2",
-      section: "B",
-      subject: "networking",
-      timeSlot: "11:30-1:00",
-    },
-    {
-      id: 6,
-      name: "Fatima Hassan",
-      regNo: "2021-CS-06",
-      isPresent: true,
-      session: "2023-24",
-      semester: "2",
-      section: "A",
-      subject: "database",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 7,
-      name: "Ahmed Khan",
-      regNo: "2021-CS-07",
-      isPresent: true,
-      session: "2023-24",
-      semester: "2",
-      section: "C",
-      subject: "networking",
-      timeSlot: "10:00-11:30",
-    },
-    {
-      id: 8,
-      name: "Zainab Malik",
-      regNo: "2021-CS-08",
-      isPresent: false,
-      session: "2023-24",
-      semester: "1",
-      section: "C",
-      subject: "programming",
-      timeSlot: "11:30-1:00",
-    },
-    {
-      id: 9,
-      name: "Omar Farooq",
-      regNo: "2021-CS-09",
-      isPresent: true,
-      session: "2023-24",
-      semester: "2",
-      section: "B",
-      subject: "database",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 10,
-      name: "Ayesha Tariq",
-      regNo: "2021-CS-10",
-      isPresent: false,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "networking",
-      timeSlot: "10:00-11:30",
-    },
-    {
-      id: 1,
-      name: "John Doe",
-      regNo: "2021-CS-01",
-      isPresent: true,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "programming",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      regNo: "2021-CS-02",
-      isPresent: false,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "programming",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 3,
-      name: "Ali Ahmad",
-      regNo: "2021-CS-03",
-      isPresent: true,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "programming",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 4,
-      name: "Sara Khan",
-      regNo: "2021-CS-04",
-      isPresent: true,
-      session: "2023-24",
-      semester: "1",
-      section: "B",
-      subject: "database",
-      timeSlot: "10:00-11:30",
-    },
-    {
-      id: 5,
-      name: "Usman Ali",
-      regNo: "2021-CS-05",
-      isPresent: false,
-      session: "2023-24",
-      semester: "2",
-      section: "B",
-      subject: "networking",
-      timeSlot: "11:30-1:00",
-    },
-    {
-      id: 6,
-      name: "Fatima Hassan",
-      regNo: "2021-CS-06",
-      isPresent: true,
-      session: "2023-24",
-      semester: "2",
-      section: "A",
-      subject: "database",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 7,
-      name: "Ahmed Khan",
-      regNo: "2021-CS-07",
-      isPresent: true,
-      session: "2023-24",
-      semester: "2",
-      section: "C",
-      subject: "networking",
-      timeSlot: "10:00-11:30",
-    },
-    {
-      id: 8,
-      name: "Zainab Malik",
-      regNo: "2021-CS-08",
-      isPresent: false,
-      session: "2023-24",
-      semester: "1",
-      section: "C",
-      subject: "programming",
-      timeSlot: "11:30-1:00",
-    },
-    {
-      id: 9,
-      name: "Omar Farooq",
-      regNo: "2021-CS-09",
-      isPresent: true,
-      session: "2023-24",
-      semester: "2",
-      section: "B",
-      subject: "database",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 10,
-      name: "Ayesha Tariq",
-      regNo: "2021-CS-10",
-      isPresent: false,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "networking",
-      timeSlot: "10:00-11:30",
-    },
-    {
-      id: 9,
-      name: "Omar Farooq",
-      regNo: "2021-CS-19",
-      isPresent: true,
-      session: "2023-24",
-      semester: "2",
-      section: "B",
-      subject: "database",
-      timeSlot: "8:30-10:00",
-    },
-    {
-      id: 10,
-      name: "Ayesha Tariq",
-      regNo: "2021-CS-20",
-      isPresent: false,
-      session: "2023-24",
-      semester: "1",
-      section: "A",
-      subject: "networking",
-      timeSlot: "10:00-11:30",
-    },
-  ]);
+  // Generate 45 students for semester 2
+  const generateDummyStudents = () => {
+    const names = [
+      "Ali Ahmad",
+      "Sara Khan",
+      "Usman Ali",
+      "Fatima Hassan",
+      "Ahmed Khan",
+      "Zainab Malik",
+      "Omar Farooq",
+      "Ayesha Tariq",
+      "Hassan Ali",
+      "Maryam Shah",
+      "Bilal Khan",
+      "Sana Malik",
+      "Kamran Ahmed",
+      "Nadia Hassan",
+      "Faisal Raza",
+    ];
 
+    const baseStudents: Student[] = [];
+    let id = 1;
+
+    // Generate 15 students for each subject in semester 2
+    ["oop", "dld", "calculus"].forEach((subject) => {
+      for (let i = 0; i < 15; i++) {
+        const regNo = `2021-CS-${String(id).padStart(3, "0")}`;
+        baseStudents.push({
+          id: id++,
+          name: names[Math.floor(Math.random() * names.length)],
+          regNo,
+          isPresent: Math.random() > 0.3,
+          session: "2023-24",
+          semester: "2",
+          section: "Combined",
+          subject,
+          timeSlot: ["8:30-10:00", "10:00-11:30", "11:30-1:00"][
+            Math.floor(Math.random() * 3)
+          ],
+        });
+      }
+    });
+
+    // Add first semester students with M1/M2 sections
+    const firstSemStudents: Student[] = [
+      {
+        id: id++,
+        name: "John Doe",
+        regNo: "2021-CS-046",
+        isPresent: true,
+        session: "2023-24",
+        semester: "1",
+        section: "M1",
+        subject: "programming",
+        timeSlot: "8:30-10:00",
+      },
+      {
+        id: id++,
+        name: "Jane Smith",
+        regNo: "2021-CS-047",
+        isPresent: false,
+        session: "2023-24",
+        semester: "1",
+        section: "M2",
+        subject: "database",
+        timeSlot: "10:00-11:30",
+      },
+    ];
+
+    return [...baseStudents, ...firstSemStudents];
+  };
+
+  const [students, setStudents] = useState<Student[]>(generateDummyStudents());
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [visibleItems, setVisibleItems] = useState(ITEMS_PER_BATCH);
+  const [isPageTransitioning, setIsPageTransitioning] = useState(false);
+  const [tableKey, setTableKey] = useState(0);
+
   const { ref: loadMoreRef, inView } = useInView({
     threshold: 0.1,
     rootMargin: "100px",
   });
 
-  // Reset animation state for table rows
-  const [tableKey, setTableKey] = useState(0);
-
-  // Add loading state for page transitions
-  const [isPageTransitioning, setIsPageTransitioning] = useState(false);
-
-  // First apply filters and sorting
+  // Simplified filter logic
   const filteredStudents = students.filter((student) => {
     if (!filterCriteria) return true;
-    return Object.entries(filterCriteria).every(([key, value]) => {
-      if (!value) return true;
-      return student[key as keyof Student] === value;
+
+    // Subject code mapping
+    const subjectMapping: { [key: string]: string } = {
+      CS101: "programming",
+      CS102: "database",
+      CS201: "oop",
+      CS202: "dld",
+      MTH101: "calculus",
+    };
+
+    // Match each criteria
+    const matchSemester =
+      !filterCriteria.semester || student.semester === filterCriteria.semester;
+
+    const matchShift =
+      !filterCriteria.shift ||
+      (filterCriteria.shift === "Morning" &&
+        (student.timeSlot.startsWith("8:30") ||
+          student.timeSlot.startsWith("10:00"))) ||
+      (filterCriteria.shift === "Evening" &&
+        student.timeSlot.startsWith("11:30"));
+
+    const matchTimeSlot =
+      !filterCriteria.timeSlot ||
+      (filterCriteria.timeSlot === "1" && student.timeSlot === "8:30-10:00") ||
+      (filterCriteria.timeSlot === "2" && student.timeSlot === "10:00-11:30") ||
+      (filterCriteria.timeSlot === "3" && student.timeSlot === "11:30-1:00");
+
+    const matchSection =
+      !filterCriteria.section || student.section === filterCriteria.section;
+
+    const matchSubject =
+      !filterCriteria.subjectCode ||
+      student.subject === subjectMapping[filterCriteria.subjectCode];
+
+    // Debug output
+    console.log("Filtering student:", student.name, {
+      matchSemester,
+      matchShift,
+      matchTimeSlot,
+      matchSection,
+      matchSubject,
+      studentSubject: student.subject,
+      filterSubject: filterCriteria.subjectCode,
+      mappedSubject: subjectMapping[filterCriteria.subjectCode],
     });
+
+    return (
+      matchSemester &&
+      matchShift &&
+      matchTimeSlot &&
+      matchSection &&
+      matchSubject
+    );
   });
 
   const sortedStudents = [...filteredStudents].sort((a, b) => {
