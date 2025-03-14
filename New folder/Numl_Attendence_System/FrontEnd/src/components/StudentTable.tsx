@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { FilterCriteria } from "./SecondaryNav";
-import { Save, User2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Save, User2, ArrowUpDown } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 interface Student {
   id: number;
@@ -19,6 +20,13 @@ interface Student {
 interface StudentTableProps {
   filterCriteria?: FilterCriteria;
 }
+
+interface SortConfig {
+  key: keyof Student;
+  direction: "asc" | "desc";
+}
+
+const BATCH_SIZE = 30;
 
 const StudentTable = ({ filterCriteria }: StudentTableProps) => {
   const [students, setStudents] = useState<Student[]>([
@@ -158,8 +166,65 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
 
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const studentsPerPage = 10;
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const { ref: loadMoreRef, inView } = useInView({
+    threshold: 0.1,
+    rootMargin: "100px",
+  });
+
+  // Reset visible count when filter criteria changes
+  useEffect(() => {
+    setVisibleCount(BATCH_SIZE);
+    setSelectedRows([]);
+    setSortConfig(null);
+  }, [filterCriteria]);
+
+  // Load more items when scroll reaches threshold
+  useEffect(() => {
+    if (inView) {
+      setVisibleCount((prev) => prev + BATCH_SIZE);
+    }
+  }, [inView]);
+
+  const filteredStudents = students.filter((student) => {
+    if (!filterCriteria) return true;
+    return Object.entries(filterCriteria).every(([key, value]) => {
+      if (!value) return true;
+      return student[key as keyof Student] === value;
+    });
+  });
+
+  const sortedStudents = [...filteredStudents].sort((a, b) => {
+    if (!sortConfig) return 0;
+    const { key, direction } = sortConfig;
+
+    // Special handling for boolean values
+    if (key === "isPresent") {
+      return direction === "asc"
+        ? Number(a.isPresent) - Number(b.isPresent)
+        : Number(b.isPresent) - Number(a.isPresent);
+    }
+
+    // Handle string comparison
+    const valueA = String(a[key]).toLowerCase();
+    const valueB = String(b[key]).toLowerCase();
+
+    if (valueA < valueB) return direction === "asc" ? -1 : 1;
+    if (valueA > valueB) return direction === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  const visibleStudents = sortedStudents.slice(0, visibleCount);
+  const hasMoreToLoad = visibleCount < sortedStudents.length;
+
+  const handleSelectAll = () => {
+    setSelectedRows((current) =>
+      current.length === visibleStudents.length
+        ? []
+        : visibleStudents.map((s) => s.id)
+    );
+  };
 
   const handleRowSelect = (id: number) => {
     setSelectedRows((current) =>
@@ -169,12 +234,18 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
     );
   };
 
-  const handleSelectAll = () => {
-    setSelectedRows((current) =>
-      current.length === filteredStudents.length
-        ? []
-        : filteredStudents.map((s) => s.id)
-    );
+  const handleSort = (key: keyof Student) => {
+    setSortConfig((current) => ({
+      key,
+      direction:
+        current?.key === key && current.direction === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  const handleSaveChanges = () => {
+    // Simulate API call
+    console.log("Saving changes:", students);
+    setHasChanges(false);
   };
 
   const toggleAttendance = (ids: number[], present: boolean) => {
@@ -184,38 +255,8 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
       )
     );
     setHasChanges(true);
-  };
-
-  const handleSaveChanges = () => {
-    // Simulate API call
-    console.log("Saving changes:", students);
-    setHasChanges(false);
-  };
-
-  // Reset selected rows when filter criteria changes
-  useEffect(() => {
+    // Clear selection after changing status
     setSelectedRows([]);
-  }, [filterCriteria]);
-
-  const filteredStudents = students.filter((student) => {
-    if (!filterCriteria) return true;
-
-    return Object.entries(filterCriteria).every(([key, value]) => {
-      if (!value) return true; // Skip empty filters
-      return student[key as keyof Student] === value;
-    });
-  });
-
-  const paginatedStudents = filteredStudents.slice(
-    (currentPage - 1) * studentsPerPage,
-    currentPage * studentsPerPage
-  );
-
-  const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    setSelectedRows([]); // Clear selection when changing pages
   };
 
   if (!filterCriteria || Object.values(filterCriteria).every((v) => v === "")) {
@@ -251,7 +292,6 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
             <strong className="text-white">{filteredStudents.length}</strong>{" "}
             students
           </span>
-
           <AnimatePresence mode="wait">
             {selectedRows.length > 0 ? (
               <motion.div
@@ -283,7 +323,6 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
           </AnimatePresence>
         </div>
       </div>
-
       {/* Table */}
       <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
@@ -292,23 +331,50 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
               <th className="w-px px-6 py-4">
                 <input
                   type="checkbox"
-                  checked={selectedRows.length === filteredStudents.length}
+                  checked={
+                    selectedRows.length === visibleStudents.length &&
+                    visibleStudents.length > 0
+                  }
                   onChange={handleSelectAll}
                   className="rounded border-blue-700 text-blue-600 focus:ring-blue-500 bg-blue-800/50"
                 />
               </th>
-              {["Roll No", "Name", "Status"].map((header) => (
+              {[
+                { key: "regNo", label: "Roll No" },
+                { key: "name", label: "Name" },
+                { key: "isPresent", label: "Status" },
+              ].map(({ key, label }) => (
                 <th
-                  key={header}
-                  className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider"
+                  key={key}
+                  onClick={() => handleSort(key as keyof Student)}
+                  className="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer group hover:bg-blue-800/50 transition-colors"
                 >
-                  {header}
+                  <div className="flex items-center gap-2">
+                    {label}
+                    <div
+                      className={`transition-opacity ${
+                        sortConfig?.key === key
+                          ? "opacity-100"
+                          : "opacity-0 group-hover:opacity-50"
+                      }`}
+                    >
+                      {sortConfig?.key === key ? (
+                        sortConfig.direction === "asc" ? (
+                          "↑"
+                        ) : (
+                          "↓"
+                        )
+                      ) : (
+                        <ArrowUpDown size={14} />
+                      )}
+                    </div>
+                  </div>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
-            {paginatedStudents.map((student) => (
+            {visibleStudents.map((student, index) => (
               <motion.tr
                 key={student.id}
                 initial={{ opacity: 0 }}
@@ -317,6 +383,10 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
                 className={`transition-colors ${
                   selectedRows.includes(student.id) ? "bg-blue-50" : ""
                 }`}
+                // Add ref to the second-to-last item
+                ref={
+                  index === visibleStudents.length - 2 ? loadMoreRef : undefined
+                }
               >
                 <td className="w-px px-6 py-4">
                   <input
@@ -363,61 +433,17 @@ const StudentTable = ({ filterCriteria }: StudentTableProps) => {
             ))}
           </tbody>
         </table>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-500">
-                Showing {(currentPage - 1) * studentsPerPage + 1} to{" "}
-                {Math.min(
-                  currentPage * studentsPerPage,
-                  filteredStudents.length
-                )}{" "}
-                of {filteredStudents.length} students
-              </div>
-              <div className="flex items-center gap-2">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors"
-                >
-                  <ChevronLeft size={16} />
-                </motion.button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
-                    <motion.button
-                      key={page}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handlePageChange(page)}
-                      className={`min-w-[32px] h-8 rounded-lg text-sm font-medium ${
-                        currentPage === page
-                          ? "bg-blue-900 text-white"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      {page}
-                    </motion.button>
-                  )
-                )}
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors"
-                >
-                  <ChevronRight size={16} />
-                </motion.button>
-              </div>
-            </div>
+        {/* Loading indicator */}
+        {hasMoreToLoad && (
+          <div className="p-4 flex justify-center text-gray-400">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full"
+            />
           </div>
         )}
       </div>
-
       {/* Save Changes Button */}
       {hasChanges && (
         <motion.div
