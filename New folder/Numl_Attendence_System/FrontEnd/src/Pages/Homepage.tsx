@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
-import SecondaryNav from "../components/SecondaryNav";
+import SecondaryNav, { FilterCriteria } from "../components/SecondaryNav";
 import StudentTable from "../components/StudentTable";
 
 function Homepage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filterCriteria, setFilterCriteria] = useState<
+    FilterCriteria | undefined
+  >();
+
+  const handleLoadStudents = (filters: FilterCriteria) => {
+    setFilterCriteria(filters);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -17,12 +23,8 @@ function Homepage() {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-6"
         >
-          <SecondaryNav
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-          />
-
-          <StudentTable searchQuery={searchQuery} />
+          <SecondaryNav onLoadStudents={handleLoadStudents} />
+          <StudentTable filterCriteria={filterCriteria} />
         </motion.div>
       </main>
     </div>
